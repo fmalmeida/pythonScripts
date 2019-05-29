@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 ## Help
-"""make_UpSetR_from_tsv.py
+"""parse_resfamsDB.py
 
 Usage:
     make_UpSetR_from_tsv.py -i <Input.tsv> -x <Resfams.xlsx> -o <output.txt>
