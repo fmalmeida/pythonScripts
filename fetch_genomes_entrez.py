@@ -53,6 +53,8 @@ if collection == 'RefSeq':
     from_ftp = 'FtpPath_RefSeq'
 elif collection == 'Genbank':
     from_ftp = 'FtpPath_GenBank'
+else:
+    from_ftp = 'FtpPath_RefSeq'
 
 # Initiate Pipeline
 
