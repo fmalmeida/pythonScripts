@@ -142,7 +142,7 @@ while True:
                 win1.UnHide()
                 break
     if ev1 == 'Download Docker images':
-        ExecuteCommandSubprocess('docker pull nextflow/nextflow ; docker pull fmalmeida/compgen:BACANNOT', '')
+        ExecuteCommandSubprocess('docker pull nextflow/nextflow ; docker pull fmalmeida/compgen:MPGAP', '')
     if ev1 == 'Save Parameters':
 
 ## GENERAL PARAMETERS
@@ -259,7 +259,7 @@ while True:
 
         print('Configuration file saved in: ', configFile, sep = '')
         print('\nDone! You can now execute the pipeline.\n\n')
-        entries = ['echo "nextflow run fmalmeida/MpGAP -c ', configFile, '"']
+        entries = ['nextflow run fmalmeida/MpGAP -c ', configFile]
         cmd = "".join(entries)
 
     if ev1 == 'Run Pipeline':
