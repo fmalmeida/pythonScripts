@@ -47,7 +47,7 @@ def pfam_index(pfamHMM):
 ###################################
 def pfam_detection(pfamHMM, pfamLIST, pepFASTA, prefix):
     os.system("hmmfetch -f {0} {1} | hmmsearch -o pfam.search.tmp --noali --tblout {3}_pfam_hits.txt - {2}".format(pfamHMM, pfamLIST, pepFASTA, prefix))
-    os.system("grep -v \"#\" {0}_pfam_hits.txt | cut -d \"-\" -f 1 | sed 's/ *$//g' > tmp.target.list").format(prefix)
+    os.system("grep -v \"#\" {0}_pfam_hits.txt | cut -d \"-\" -f 1 | sed 's/ *$//g' > tmp.target.list".format(prefix))
     os.system("awk \'NR==FNR{{ids[$0]; next}} ($1 in ids){{ printf \">\" $0 }}\' tmp.target.list RS='>' {0} > {1}_target.fa".format(pepFASTA, prefix))
     os.system("rm tmp.target.list pfam.search.tmp")
 
@@ -71,7 +71,7 @@ if __name__ == '__main__':
         print("Initiating Pfam domain detection")
         print("\nCommands used:")
         print("\thmmfetch -f {0} {1} | hmmsearch -o pfam.search.tmp --noali --tblout pfam_hits.txt - {2}".format(arguments['--pfam'], arguments['--pfam_list'], arguments['--prots']))
-        print("\tgrep -v \"#\" pfam_hits.txt | cut -d \"-\" -f 1 | sed 's/ *$//g' > tmp.target.list")
+        print("\tgrep -v \"#\" {0}_pfam_hits.txt | cut -d \"-\" -f 1 | sed 's/ *$//g' > tmp.target.list".format(prefix))
         print("\tawk \'NR==FNR{{ids[$0]; next}} ($1 in ids){{ printf \">\" $0 }}\' tmp.target.list RS='>' {0} > {1}".format(arguments['--prots'], prefix=arguments['--prefix']))
         print("\trm tmp.target.list pfam.search.tmp")
         print("\nGenes that contain the pfam domains of interest are in:\n\t{0}".format(prefix=arguments['--prefix']))
