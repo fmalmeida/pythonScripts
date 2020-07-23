@@ -71,7 +71,7 @@ if __name__ == '__main__':
         print("Initiating Pfam domain detection")
         print("\nCommands used:")
         print("\thmmfetch -f {0} {1} | hmmsearch -o pfam.search.tmp --noali --tblout pfam_hits.txt - {2}".format(arguments['--pfam'], arguments['--pfam_list'], arguments['--prots']))
-        print("\tgrep -v \"#\" {0}_pfam_hits.txt | cut -d \"-\" -f 1 | sed 's/ *$//g' > tmp.target.list".format(prefix))
+        print("\tgrep -v \"#\" {0}_pfam_hits.txt | cut -d \"-\" -f 1 | sed 's/ *$//g' > tmp.target.list".format(arguments['--prefix']))
         print("\tawk \'NR==FNR{{ids[$0]; next}} ($1 in ids){{ printf \">\" $0 }}\' tmp.target.list RS='>' {0} > {1}".format(arguments['--prots'], prefix=arguments['--prefix']))
         print("\trm tmp.target.list pfam.search.tmp")
         print("\nGenes that contain the pfam domains of interest are in:\n\t{0}".format(prefix=arguments['--prefix']))
