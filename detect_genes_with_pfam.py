@@ -40,16 +40,16 @@ import os
 ### Function for Pfam indexation ###
 ####################################
 def pfam_index(pfamHMM):
-    os.system("hmmpress {0}".format(pfamHMM))
+    os.system(f"hmmpress {pfamHMM}")
 
 ###################################
 ### Function for Pfam detection ###
 ###################################
 def pfam_detection(pfamHMM, pfamLIST, pepFASTA, prefix):
-    os.system("hmmfetch -f {0} {1} | hmmsearch -o pfam.search.tmp --noali --tblout {3}_pfam_hits.txt - {2}".format(pfamHMM, pfamLIST, pepFASTA, prefix))
-    os.system("grep -v \"#\" {0}_pfam_hits.txt | awk '{{ print $1 }}' | sed 's/ *$//g' > tmp.target.list".format(prefix))
-    os.system("awk \'NR==FNR{{ids[$0]; next}} ($1 in ids){{ printf \">\" $0 }}\' tmp.target.list RS='>' {0} | \
-    awk -F \" \" '/^>/ {{ print $1; next }} 1' > {1}_target.fa".format(pepFASTA, prefix))
+    os.system(f"hmmfetch -f {pfamHMM} {pfamLIST} | hmmsearch -o pfam.search.tmp --noali --tblout {prefix}_pfam_hits.txt - {pepFASTA}")
+    os.system(f"grep -v \"#\" {prefix}_pfam_hits.txt | awk '{{ print $1 }}' | sed 's/ *$//g' > tmp.target.list")
+    os.system(f"awk \'NR==FNR{{ids[$0]; next}} ($1 in ids){{ printf \">\" $0 }}\' tmp.target.list RS='>' {pepFASTA} | \
+    awk -F \" \" '/^>/ {{ print $1; next }} 1' > {prefix}_target.fa")
     os.system("rm tmp.target.list pfam.search.tmp")
 
 
@@ -71,12 +71,12 @@ if __name__ == '__main__':
     elif arguments['pfam-detect'] and arguments['--pfam'] and arguments['--prots'] and arguments['--pfam_list']:
         print("Initiating Pfam domain detection")
         print("\nCommands used:")
-        print("\thmmfetch -f {0} {1} | hmmsearch -o pfam.search.tmp --noali --tblout pfam_hits.txt - {2}".format(arguments['--pfam'], arguments['--pfam_list'], arguments['--prots']))
-        print("\tgrep -v \"#\" {0}_pfam_hits.txt | awk '{{ print $1 }}' | sed 's/ *$//g' > tmp.target.list".format(arguments['--prefix']))
-        print("\tawk \'NR==FNR{{ids[$0]; next}} ($1 in ids){{ printf \">\" $0 }}\' tmp.target.list RS='>' {0} | awk -F \" \" '/^>/ {{ print $1; next }} 1' > {1}_target.fa".format(arguments['--prots'], arguments['--prefix']))
+        print(f"\thmmfetch -f {arguments['--pfam']} {arguments['--pfam_list']} | hmmsearch -o pfam.search.tmp --noali --tblout {arguments['--prefix']}_pfam_hits.txt - {arguments['--prots']}")
+        print(f"\tgrep -v \"#\" {arguments['--prefix']}_pfam_hits.txt | awk '{{ print $1 }}' | sed 's/ *$//g' > tmp.target.list")
+        print(f"\tawk \'NR==FNR{{ids[$0]; next}} ($1 in ids){{ printf \">\" $0 }}\' tmp.target.list RS='>' {arguments['--prots']} | awk -F \" \" '/^>/ {{ print $1; next }} 1' > {arguments['--prefix']}_target.fa")
         print("\trm tmp.target.list pfam.search.tmp")
-        print("\nGenes that contain the pfam domains of interest are in:\n\t{0}_target.fa".format(arguments['--prefix']))
         pfam_detection(pfamHMM=arguments['--pfam'], pfamLIST=arguments['--pfam_list'], pepFASTA=arguments['--prots'], prefix=arguments['--prefix'])
+        print("\nGenes that contain the pfam domains of interest are in:\n\t{0}_target.fa".format(arguments['--prefix']))
 
     ## None
     else:
