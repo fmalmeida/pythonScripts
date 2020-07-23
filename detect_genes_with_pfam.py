@@ -72,9 +72,9 @@ if __name__ == '__main__':
         print("\nCommands used:")
         print("\thmmfetch -f {0} {1} | hmmsearch -o pfam.search.tmp --noali --tblout pfam_hits.txt - {2}".format(arguments['--pfam'], arguments['--pfam_list'], arguments['--prots']))
         print("\tgrep -v \"#\" pfam_hits.txt | cut -d \"-\" -f 1 | sed 's/ *$//g' > tmp.target.list")
-        print("\nOutput:")
         print("\tawk \'NR==FNR{{ids[$0]; next}} ($1 in ids){{ printf \">\" $0 }}\' tmp.target.list RS='>' {0} > {1}".format(arguments['--prots'], arguments['--out']))
         print("rm tmp.target.list pfam.search.tmp")
+        print("\nOutput:")
         print("\nResults are in:\n\t{0}".format(arguments['--out']))
         pfam_detection(pfamHMM=arguments['--pfam'], pfamLIST=arguments['--pfam_list'], pepFASTA=arguments['--prots'], outFASTA=arguments['--out'])
 
