@@ -11,25 +11,30 @@ Usage:
     plot_dna_features.py
     plot_dna_features.py -h|--help
     plot_dna_features.py -v|--version
-    plot_dna_features.py (--input <gff> | --fofn <file>) (--start <start_base> --end <end_base> --contig <contig_name>) [--feature <feature_type> --title <title> --label <label> --color <color> --output <png_out> --width <width> --height <height>]
+    plot_dna_features.py check-gff (--input <gff>)
+    plot_dna_features.py (--input <gff> | --fofn <file>) (--start <start_base> --end <end_base> --contig <contig_name>) [--feature <feature_type> --identification <id> --title <title> --label <label> --color <color> --output <png_out> --width <width> --height <height>]
 
 Options:
-    -h --help                   Show this screen.
-    -v --version                Show version information
-    --input=<gff>               Used to plot dna features from a single GFF file
-    --fofn=<file>               Used to plot dna features from multiple GFF files. Contents must be in csv format with 3 columns:
-                                gff,custom_label,color (HEX format). Features from each GFF will have the color set in the 3rd column,
-                                labeled as -> 'custom_label: gene id'.
-    --start=<start_base>        Starting position for plotting.
-    --end=<end_base>            Ending position for plotting.
-    --contig=<contig_name>      Name of the contig which you want to plot.
-    --title=<title>             Plot title [default: Gene Plot].
-    --label=<label>             Custom label for plotting. Legends will be in the following format: 'Custom label: gene id' [default: Gene].
-    --feature=<feature_type>    Type of the GFF feature (3rd column) which you want to plot [default: gene].
-    --color=<color>             HEX entry for desired plotting color [default: #ccccff].
-    --width=<width>             Plot width ratio [default: 20].
-    --height=<height>           Plot height ratio [default: 5].
-    --output=<png_out>          Output PNG filename [default: ./out.png].
+    -h --help                               Show this screen.
+    -v --version                            Show version information
+    check-gff                               Does a simple parsing of the GFF file so the user knows the available qualifiers that
+                                            can be used as gene identifiers. GFF qualifiers are retrieved from the 9th column.
+    --input=<gff>                           Used to plot dna features from a single GFF file
+    --fofn=<file>                           Used to plot dna features from multiple GFF files. Contents must be in csv format with 3 columns:
+                                            gff,custom_label,color (HEX format). Features from each GFF will have the color set in the 3rd column,
+                                            labeled as -> 'custom_label: gene id'.
+    --start=<start_base>                    Starting position for plotting.
+    --end=<end_base>                        Ending position for plotting.
+    --contig=<contig_name>                  Name of the contig which you want to plot.
+    --identification=<id>                   Which GFF qualifier must be used as gene identification?
+                                            Please check for available qualifiers with 'check-gff' [default: ID]
+    --title=<title>                         Plot title [default: Gene Plot].
+    --label=<label>                         Custom label for plotting. Legends will be in the following format: 'Custom label: gene id' [default: Gene].
+    --feature=<feature_type>                Type of the GFF feature (3rd column) which you want to plot [default: gene].
+    --color=<color>                         HEX entry for desired plotting color [default: #ccccff].
+    --width=<width>                         Plot width ratio [default: 20].
+    --height=<height>                       Plot height ratio [default: 5].
+    --output=<png_out>                      Output PNG filename [default: ./out.png].
 """
 
 ##################################
@@ -45,12 +50,25 @@ import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 
 
+##################################################
+### Function for checking available qualifiers ###
+##################################################
+def check_gff(infile):
+    # Load GFF and its sequences
+    gff = GFF.parse(infile)
+
+    # Check qualifiers
+    for rec in gff:
+        print("The available qualifiers to be used is gene identification from the 9th column are:")
+        print(rec.features[0])
+        print("Please select only one of the available qualifiers to be used as gene identification!")
+        exit()
 
 ######################################################
 ### Function for execution with a single GFF input ###
 ######################################################
 
-def single_gff(infile, start, end, contig, feature, coloring, custom_label, outfile, plot_title, plot_width, plot_height):
+def single_gff(infile, start, end, contig, feature, qualifier, coloring, custom_label, outfile, plot_title, plot_width, plot_height):
     # Subset GFF based on chr and feature type
     limit_info = dict(
             gff_id   = [contig],
@@ -81,11 +99,11 @@ def single_gff(infile, start, end, contig, feature, coloring, custom_label, outf
                 # Create input string
                 ## Label in the gene plot
                 # input= GraphicFeature(start=int(rec.features[i].location.start), end=int(rec.features[i].location.end),
-                #                       strand=int(strand), label="{0}: {1}".format(custom_label, str(rec.features[i].qualifiers['Name'][0])), color=coloring)
+                #                       strand=int(strand), label="{0}: {1}".format(custom_label, str(rec.features[i].qualifiers[qualifier][0])), color=coloring)
 
                 ## Label not in the gene plot
                 input= GraphicFeature(start=int(rec.features[i].location.start), end=int(rec.features[i].location.end),
-                                      strand=int(strand), label=str(rec.features[i].qualifiers['Name'][0]), color=coloring)
+                                      strand=int(strand), label=str(rec.features[i].qualifiers[qualifier][0]), color=coloring)
 
                 # Append
                 features.append(input)
@@ -105,7 +123,7 @@ def single_gff(infile, start, end, contig, feature, coloring, custom_label, outf
 ### Function for execution with multiple GFF inputs ###
 #######################################################
 
-def multiple_gff(input_fofn, start, end, contig, feature, outfile, plot_title, plot_width, plot_height):
+def multiple_gff(input_fofn, start, end, contig, qualifier, feature, outfile, plot_title, plot_width, plot_height):
 
     # Open list of filenames containing GFFs
     file = open(input_fofn, 'r')
@@ -149,11 +167,11 @@ def multiple_gff(input_fofn, start, end, contig, feature, outfile, plot_title, p
                     # Create input string
                     ## Label in the gene plot
                     # input= GraphicFeature(start=int(rec.features[i].location.start), end=int(rec.features[i].location.end),
-                    #                       strand=int(strand), label="{0}: {1}".format(labeling, str(rec.features[i].qualifiers['Name'][0])), color=coloring)
+                    #                       strand=int(strand), label="{0}: {1}".format(labeling, str(rec.features[i].qualifiers[qualifier][0])), color=coloring)
 
                     ## Label not in the gene plot
                     input= GraphicFeature(start=int(rec.features[i].location.start), end=int(rec.features[i].location.end),
-                                          strand=int(strand), label=str(rec.features[i].qualifiers['Name'][0]), color=coloring)
+                                          strand=int(strand), label=str(rec.features[i].qualifiers[qualifier][0]), color=coloring)
 
                     # Append DNA features plot
                     features.append(input)
@@ -179,13 +197,17 @@ def multiple_gff(input_fofn, start, end, contig, feature, outfile, plot_title, p
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='v1.0 by Felipe Marques de Almeida')
 
+    ## Check GFF
+    if arguments['check-gff'] and arguments['--input']:
+        check_gff(arguments['--input'])
+
     ## Single GFF
     if arguments['--input'] and arguments['--start'] and arguments['--end'] and arguments['--contig']:
         print("Executing the pipeline for a single GFF input")
         single_gff(infile=arguments['--input'], start=arguments['--start'], end=arguments['--end'],
                    contig=arguments['--contig'], feature=arguments['--feature'], coloring=arguments['--color'],
                    custom_label=arguments['--label'], outfile=arguments['--output'], plot_title=arguments['--title'],
-                   plot_width=arguments['--width'], plot_height=arguments['--height'])
+                   qualifier=arguments['--identification'], plot_width=arguments['--width'], plot_height=arguments['--height'])
         print("Done, checkout the results in {}".format(arguments['--output']))
 
     ## Multiple GFFs
@@ -193,7 +215,8 @@ if __name__ == '__main__':
         print("Executing the pipeline for multiple GFF inputs")
         multiple_gff(input_fofn=arguments['--fofn'], start=arguments['--start'], end=arguments['--end'],
                      contig=arguments['--contig'], feature=arguments['--feature'], outfile=arguments['--output'],
-                     plot_title=arguments['--title'], plot_width=arguments['--width'], plot_height=arguments['--height'])
+                     qualifier=arguments['--identification'], plot_title=arguments['--title'],
+                     plot_width=arguments['--width'], plot_height=arguments['--height'])
         print("Done, checkout the results in {}".format(arguments['--output']))
 
     ## None
