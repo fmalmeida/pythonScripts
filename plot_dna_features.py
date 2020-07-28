@@ -54,14 +54,23 @@ import matplotlib.pyplot as plt
 ### Function for checking available qualifiers ###
 ##################################################
 def check_gff(infile):
+
+    # GFF overview
+    print("GFF overview:\n")
+    examiner = GFFExaminer()
+    in_handle = open(infile)
+    pprint.pprint(examiner.available_limits(in_handle))
+    in_handle.close()
+    print("")
+
     # Load GFF and its sequences
     gff = GFF.parse(infile)
 
     # Check qualifiers
     for rec in gff:
-        print("The available qualifiers to be used is gene identification from the 9th column are:")
+        print("Example of the GFF's first line available qualifiers from the 9th column:\n")
         print(rec.features[0])
-        print("Please select only one of the available qualifiers to be used as gene identification!")
+        print("\nPlease select only one of the available qualifiers to be used as gene identification!")
         exit()
 
 ######################################################
