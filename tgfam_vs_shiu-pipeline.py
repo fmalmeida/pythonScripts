@@ -109,24 +109,45 @@ def summary_gffs(shiuGFF, tgfamDIR, bedtools, overlap_fraction, relaxation):
 
             # Check overlaps - Only in gene features (TGFam)
             intersectBed(shiu=shiuGFF, tgfam=tgfamGFF, bedtools=bedtools, out="tmp.intersect", overlap_fraction=f"{overlap_fraction}")
-            count = sum(1 for line in open("tmp.intersect")) # Count the number of intersections
 
             # Parse intersections
             intersect_df = intersectBed_2_DF("tmp.intersect")
-            relaxed_genes  = 0 # Genes with less than X disabling mutations
-            intact_genes   = 0 # Genes without disabling mutations
+
+            # Lists and start
+            overlaps_ids      = [] # List to store TGFam all gene ids with intersection
+            relaxed_genes_ids = [] # List to store TGFam all relaxed genes ids with intersection
+            intact_genes_ids  = [] # List to store TGFam all intact genes ids with intersection
 
             # Loop intersections
             for index, line in intersect_df.iterrows():
+                tgfam_id = filter(line["TGFAM.Attributes"].split(';'), ['ID'])[0].split("=")[1] # Select TGFam gene id from att column
                 shiuNotes     = filter(line['Shiu.Attributes'].split(';'), ['Note'])[0].split('=')[1] # Select Shiu's notes in GFFs
                 notesEvidence = shiuNotes.split("_")[3].split(",") # Disabling mutations given as evidence
                 disabling_mutations = [int(i) for i in notesEvidence] # Convert to integer
                 total = sum(disabling_mutations) # Sum the number of disabling mutations
 
+                # The following construction is used to avoid counting a TGFam gene with more than one intersection
+                # multiple times. It checks if the gene ID is already present in the list of gene ids before appending.
+                # The final list will be used to count the amount of (unique) TGFam genes with intersections.
                 if total == 0:
-                    intact_genes += 1
+                    if tgfam_id not in overlaps_ids:
+                        overlaps_ids.append(tgfam_id)
+                    if tgfam_id not in intact_genes_ids:
+                        intact_genes_ids.append(tgfam_id)
+
                 elif total >= int(relaxation):
-                    relaxed_genes += 1
+                    if tgfam_id not in overlaps_ids:
+                        overlaps_ids.append(tgfam_id)
+                    if tgfam_id not in relaxed_genes_ids:
+                        relaxed_genes_ids.append(tgfam_id)
+                else:
+                    if tgfam_id not in overlaps_ids:
+                        overlaps_ids.append(tgfam_id)
+
+            # Count the number of ids in each list
+            count         = len(overlaps_ids)
+            intact_genes  = len(intact_genes_ids)
+            relaxed_genes = len(relaxed_genes_ids)
 
 
 
@@ -136,8 +157,8 @@ def summary_gffs(shiuGFF, tgfamDIR, bedtools, overlap_fraction, relaxation):
 # Summary of {gene_family} (TGFam) gene family
 
 Overview:
-    A total of {count} overlap(s) were found between TGFam and Pseudogene annotations. Using a minimum of {overlap_fraction}
-    overlapping fraction of TGFam genes (bedtools intersect -F parameter).
+    A total of {count} TGFam genes have intersection with one or more pseudogenes annotated with Shiu's pipeline.
+        * Using a minimum of {overlap_fraction} overlapping fraction of TGFam genes (bedtools intersect -F parameter).
 
 Pseudogene evidence:
 
