@@ -15,12 +15,13 @@ Usage:
     tgfam_vs_shiu-pipeline.py.py -h|--help
     tgfam_vs_shiu-pipeline.py.py -v|--version
     tgfam_vs_shiu-pipeline.py.py summary [--tgfam <dir> --shiu <gff> --mutations <int> --bedtools <path>]
-    tgfam_vs_shiu-pipeline.py.py compare [--tgfam <dir> --shiu <gff> --mutations <int> --bedtools <path> --outdir <dir>]
+    tgfam_vs_shiu-pipeline.py.py compare [--tgfam <dir> --shiu <gff> --mutations <int> --bedtools <path> --tgfam_fraction <int> --outdir <dir>]
 
 Options:
     -h --help                   Show this screen.
     -v --version                Show version information
     --bedtools=<path>           Path to bedtools executable, v2.29.2 is suggested [default: bedtools]
+    --tgfam_fraction=<int>      Minimum overlap required as a fraction of TGFam genes in order to report a intersection [default: 0.1]
     --shiu=<gff>                GFF file containing Pseudogenes predicted with Shiu's pipeline [default: ./gffs/Pseudogenes/bnut.shiu.Pseudogenes.gff]
     --mutations=<int>           The total of disabling mutations to accept while searching for "relaxed Pseudogenes" [default: 3]
     --tgfam=<dir>               Directory containing TGFam-Finder GFF files [default: ./gffs/TGFam]
@@ -55,8 +56,8 @@ def intersectBed_2_DF(inputFile):
 ############################################################
 ### Function for running bedtools intersect between GFFs ###
 ############################################################
-def intersectBed(shiu, tgfam, bedtools, out):
-    os.system(f"{bedtools} intersect -wo -a {shiu} -b {tgfam} | awk '{{ if ($12 == \"gene\") print }}' > {out}")
+def intersectBed(shiu, tgfam, bedtools, overlap_fraction, out):
+    os.system(f"{bedtools} intersect -wo -a {shiu} -b {tgfam} -F {overlap_fraction} | awk '{{ if ($12 == \"gene\") print }}' > {out}")
 
 ##############################################
 ### Filter a GFF -- Based on a list of IDS ###
@@ -93,7 +94,7 @@ def filter_gff(input_gff, entry_list, output, mode="normal"):
 ##################################
 ### GFF summarization pipeline ###
 ##################################
-def summary_gffs(shiuGFF, tgfamDIR, bedtools, relaxation):
+def summary_gffs(shiuGFF, tgfamDIR, bedtools, overlap_fraction, relaxation):
     # Remove result if existent
     if os.path.exists("Intersection_summary.md"):
         os.remove("Intersection_summary.md")
@@ -107,7 +108,7 @@ def summary_gffs(shiuGFF, tgfamDIR, bedtools, relaxation):
             tgfamGFF = os.path.join(tgfamDIR, filename)
 
             # Check overlaps - Only in gene features (TGFam)
-            intersectBed(shiu=shiuGFF, tgfam=tgfamGFF, bedtools=bedtools, out="tmp.intersect")
+            intersectBed(shiu=shiuGFF, tgfam=tgfamGFF, bedtools=bedtools, out="tmp.intersect", overlap_fraction=f"{overlap_fraction}")
             count = sum(1 for line in open("tmp.intersect")) # Count the number of intersections
 
             # Parse intersections
@@ -135,7 +136,8 @@ def summary_gffs(shiuGFF, tgfamDIR, bedtools, relaxation):
 # Summary of {gene_family} (TGFam) gene family
 
 Overview:
-    A total of {count} overlap(s) were found between TGFam and Pseudogene annotations
+    A total of {count} overlap(s) were found between TGFam and Pseudogene annotations. Using a minimum of {overlap_fraction}
+    overlapping fraction of TGFam genes (bedtools intersect -F parameter).
 
 Pseudogene evidence:
 
@@ -154,7 +156,7 @@ Pseudogene evidence:
 ###############################
 ### GFF comparison pipeline ###
 ###############################
-def gff_compare(shiuGFF, tgfamDIR, bedtools, outdir, relaxation):
+def gff_compare(shiuGFF, tgfamDIR, bedtools, outdir, relaxation, overlap_fraction):
 
     # Remove result if existent
     if os.path.exists(f"{outdir}"):
@@ -191,12 +193,12 @@ def gff_compare(shiuGFF, tgfamDIR, bedtools, outdir, relaxation):
 # STEP 1
 
 Find intersection between TGFam and Pseudogene annotations using bedtools intersect (default)
-    + CMD: {bedtools} intersect -wo -a {shiuGFF} -b {tgfamGFF} | awk '{{ if ($12 == \"gene\") print }}' > intersected_genes.txt
+    + CMD: {bedtools} intersect -wo -a {shiuGFF} -b {tgfamGFF} -F {overlap_fraction} | awk '{{ if ($12 == \"gene\") print }}' > intersected_genes.txt
     + Note: TGFam GFF contains information of genes, mRNAs and CDS. Thus, we used awk to select only overlapping gene features.
     + Bedtools intersect result at: intersected_genes.txt
             """
             f_debug.write(log) # Write to file
-            intersectBed(shiu=shiuGFF, tgfam=tgfamGFF, bedtools=bedtools, out=f"{current_dir}/intersected_genes.txt")
+            intersectBed(shiu=shiuGFF, tgfam=tgfamGFF, bedtools=bedtools, overlap_fraction=f"{overlap_fraction}", out=f"{current_dir}/intersected_genes.txt")
 
             # Second Step
             # Separate gene ids by the number of disabling mutations
@@ -396,7 +398,8 @@ if __name__ == '__main__':
 
         # Run
         summary_gffs(shiuGFF=arguments['--shiu'], tgfamDIR=arguments['--tgfam'],
-                     bedtools=arguments['--bedtools'], relaxation=arguments['--mutations'])
+                     bedtools=arguments['--bedtools'], relaxation=arguments['--mutations'],
+                     overlap_fraction=arguments['--tgfam_fraction'])
         print("Finished!\n\nA summary of the intersections between TGFam and Shiu's Pseudogene annotation was written in: ./Intersection_summary.md\n")
 
 
@@ -420,7 +423,7 @@ Outputs will be in {arguments['--outdir']}.
 """)
         gff_compare(shiuGFF=arguments['--shiu'], tgfamDIR=arguments['--tgfam'],
                     bedtools=arguments['--bedtools'], relaxation=arguments['--mutations'],
-                    outdir=arguments['--outdir'])
+                    outdir=arguments['--outdir'], overlap_fraction=arguments['--tgfam_fraction'])
         print(f"""
 
     > END
