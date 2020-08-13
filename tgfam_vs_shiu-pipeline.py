@@ -477,8 +477,16 @@ TGFam gene ids and Pseudogene ids will be stored at:
 
             ## Save promoted Pseudogenes in its MAIN list
             for i in [*{**true_genes, **relaxed_genes}.values()]:
-                if i not in promoted_Pseudogenes:
-                    promoted_Pseudogenes.append(i)
+
+                # Some may be lists due to the processes of merging duplicated intersections
+                # of TGFam genes.
+                if type(i) == list:
+                    for j in i:
+                        if j not in promoted_Pseudogenes: # This Pseudogene id is already there?
+                            promoted_Pseudogenes.append(j)
+                else:
+                    if i not in promoted_Pseudogenes:
+                        promoted_Pseudogenes.append(i) # This Pseudogene id is already there?
 
             # Third Step
             # Separate TGFam GFFs per family into: true genes and relaxed genes
@@ -532,6 +540,10 @@ Explanations:
 
 
     # Final Step
+
+    # Count
+    total = len(promoted_Pseudogenes)
+
     # Create a final GFF for Shiu's Pseudogenes
     log = f"""
 # STEP 4
@@ -539,14 +551,26 @@ Explanations:
 Produce a final GFF final containing the remaining Pseudogenes that were accepted as Pseudogenes.
 
 For this file we will remove the Pseudogenes that have been promoted to genes (true and relaxed)
-based the intersection with TGFam gene families annotations
+based the intersection with TGFam gene families annotations.
+
+* A total of {total} pseudogenes have been removed from the GFF due to its "promotion" to
+  true and relaxed TGFam gene categories
 
 Output at: 00_final_Pseudogenes/bnut_Pseudogenes.gff
     """
-    f_debug.write(log) # Write to file
+
+    # Remove result if existent
+    if os.path.exists(f"{outdir}/00_final_Pseudogenes"):
+        os.system(f"rm -r {outdir}/00_final_Pseudogenes")
 
     ## Create outdir
     os.system(f"mkdir -p {outdir}/00_final_Pseudogenes")
+
+    # Debug file -- remove if existent
+    if os.path.exists(f"{outdir}/00_final_Pseudogenes/gff_comparison.log"):
+        os.remove(f"{outdir}/00_final_Pseudogenes/gff_comparison.log")
+    f_debug = open(f"{outdir}/00_final_Pseudogenes/gff_comparison.log", "a+")
+    f_debug.write(log) # Write to file
 
     ## Save Pseudogenes
     ## Those that have not been promoted
