@@ -112,6 +112,7 @@ def summary_gffs(shiuGFF, tgfamDIR, bedtools, overlap_fraction, relaxation):
 
             # Parse intersections
             intersect_df = intersectBed_2_DF("tmp.intersect")
+            intersections = sum(1 for line in filename) # count the number of intersections
 
             # Lists and start
             overlaps_ids      = [] # List to store TGFam all gene ids with intersection
@@ -214,7 +215,7 @@ def summary_gffs(shiuGFF, tgfamDIR, bedtools, overlap_fraction, relaxation):
 # Summary of {gene_family} (TGFam) gene family
 
 Overview:
-    A total of {count} TGFam genes have intersection with one or more pseudogenes annotated with Shiu's pipeline.
+    A total of {intersections} from {count} TGFam genes have been found with one or more pseudogenes annotated by Shiu's pipeline.
         * Using a minimum of {overlap_fraction} overlapping fraction of TGFam genes (bedtools intersect -F parameter).
 
 Pseudogene evidence:
