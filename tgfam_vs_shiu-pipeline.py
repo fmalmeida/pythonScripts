@@ -117,6 +117,7 @@ def summary_gffs(shiuGFF, tgfamDIR, bedtools, overlap_fraction, relaxation):
             overlaps_ids      = [] # List to store TGFam all gene ids with intersection
             relaxed_genes_ids = [] # List to store TGFam all relaxed genes ids with intersection
             intact_genes_ids  = [] # List to store TGFam all intact genes ids with intersection
+            pseudogenes_ids   = [] # List to store TGFam all gene ids with intersection to pseudogenes with lots of disabling mutations
 
             # Loop intersections
             for index, line in intersect_df.iterrows():
@@ -129,25 +130,81 @@ def summary_gffs(shiuGFF, tgfamDIR, bedtools, overlap_fraction, relaxation):
                 # The following construction is used to avoid counting a TGFam gene with more than one intersection
                 # multiple times. It checks if the gene ID is already present in the list of gene ids before appending.
                 # The final list will be used to count the amount of (unique) TGFam genes with intersections.
+                # Additionally, we check wheter a gene has more than one intersection, if true, it is put under the
+                # gene list for observation
                 if total == 0:
-                    if tgfam_id not in overlaps_ids:
-                        overlaps_ids.append(tgfam_id)
-                    if tgfam_id not in intact_genes_ids:
-                        intact_genes_ids.append(tgfam_id)
 
-                elif total >= int(relaxation):
-                    if tgfam_id not in overlaps_ids:
+                    # It already has a reported hit?
+                    # yes? Then put it in observation and remove from previous specific lists
+                    if tgfam_id in overlaps_ids:
+
+                        # Already put in observation?
+                        if tgfam_id not in relaxed_genes_ids:
+                            relaxed_genes_ids.append(tgfam_id)
+                        # remove this gene other lists if it is there
+                        if tgfam_id in intact_genes_ids:
+                            intact_genes_ids.remove(tgfam_id)
+                        if tgfam_id in pseudogenes_ids:
+                            pseudogenes_ids.remove(tgfam_id)
+
+                    # Add it to the MAIN count (unique only)
+                    elif tgfam_id not in overlaps_ids:
                         overlaps_ids.append(tgfam_id)
-                    if tgfam_id not in relaxed_genes_ids:
-                        relaxed_genes_ids.append(tgfam_id)
+
+                        # Add it to the intact gene count (unique only)
+                        if tgfam_id not in intact_genes_ids:
+                            intact_genes_ids.append(tgfam_id)
+
+                elif total > 0 and total >= int(relaxation):
+
+                    # It already has a reported hit?
+                    # yes? Then put it in observation and remove from previous specific lists
+                    if tgfam_id in overlaps_ids:
+
+                        # Already put in observation?
+                        if tgfam_id not in relaxed_genes_ids:
+                            relaxed_genes_ids.append(tgfam_id)
+                        # remove this gene other lists if it is there
+                        if tgfam_id in intact_genes_ids:
+                            intact_genes_ids.remove(tgfam_id)
+                        if tgfam_id in pseudogenes_ids:
+                            pseudogenes_ids.remove(tgfam_id)
+
+                    # Add it to the MAIN count (unique only)
+                    elif tgfam_id not in overlaps_ids:
+                        overlaps_ids.append(tgfam_id)
+
+                        # Add it to the intact gene count (unique only)
+                        if tgfam_id not in relaxed_genes_ids:
+                            relaxed_genes_ids.append(tgfam_id)
+
                 else:
-                    if tgfam_id not in overlaps_ids:
+                    # It already has a reported hit?
+                    # yes? Then put it in observation and remove from previous specific lists
+                    if tgfam_id in overlaps_ids:
+
+                        # Already put in observation?
+                        if tgfam_id not in relaxed_genes_ids:
+                            relaxed_genes_ids.append(tgfam_id)
+                        # remove this gene other lists if it is there
+                        if tgfam_id in intact_genes_ids:
+                            intact_genes_ids.remove(tgfam_id)
+                        if tgfam_id in pseudogenes_ids:
+                            pseudogenes_ids.remove(tgfam_id)
+
+                    # Add it to the MAIN count (unique only)
+                    elif tgfam_id not in overlaps_ids:
                         overlaps_ids.append(tgfam_id)
+
+                        # Add it to the intact gene count (unique only)
+                        if tgfam_id not in pseudogenes_ids:
+                            pseudogenes_ids.append(tgfam_id)
 
             # Count the number of ids in each list
             count         = len(overlaps_ids)
             intact_genes  = len(intact_genes_ids)
             relaxed_genes = len(relaxed_genes_ids)
+            pseudogenes   = len(pseudogenes_ids)
 
 
 
@@ -162,8 +219,9 @@ Overview:
 
 Pseudogene evidence:
 
-    * Amount of genes (from overlaps) without a single disabling mutation predicted by Shiu's pipeline: {intact_genes}
-    * Amount of genes (from overlaps) with 1 to {relaxation} disabling mutations predicted by Shiu's pipeline: {relaxed_genes}
+    * Amount of genes (from overlaps) without a single disabling mutations predicted by Shiu's pipeline: {intact_genes}
+    * Amount of genes (from overlaps) with 1 to {relaxation} disabling mutations or with intersections to more than one pseudogenes predicted by Shiu's pipeline: {relaxed_genes}
+    * Amount of genes (from overlaps) with more than {relaxation} disabling mutations predicted by Shiu's pipeline: {pseudogenes}
                 """, file=f)
 
             # Remove temporary files
@@ -236,13 +294,13 @@ each entry.
 TGFam gene ids and Pseudogene ids will be stored at:
     + True genes (thus the promoted Pseudogenes): gene_ids/accepted_as_genes_ids.txt
     + Relaxed genes (thus the Pseudogenes in observation): gene_ids/relaxed_genes_ids.txt
-    + True Pseudogenes (thus the TGFam genes that will be relegated): gene_ids/accepted_as_Pseudogenes_ids.txt
+    + True Pseudogenes (thus the TGFam genes that will be relegated): gene_ids/accepted_as_pseudogenes_ids.txt
             """
             f_debug.write(log) # Write to file
 
             # Initiate lists
             true_genes        = {} # Dict for storage of TGFam gene ids of "true" genes and consequently of promoted Pseudogenes
-            relaxed_genes     = {} # Dict for storage of TGFam gene ids (and Pseudogenes) of genes with few disabling mutations
+            relaxed_genes     = {} # Dict for storage of TGFam gene ids (and Pseudogenes) of genes with few disabling mutations (or with multiple hits)
             true_pseudogenes  = {} # Dict for storage of TGFam gene ids of actually Pseudogenes (and consequently true Pseudogenes)
 
             # Outputs
@@ -261,12 +319,137 @@ TGFam gene ids and Pseudogene ids will be stored at:
                 disabling_mutations = [int(i) for i in notesEvidence] # Convert to integer
                 total = sum(disabling_mutations) # Sum the number of disabling mutations
 
+                # The following construction is used to avoid counting a TGFam gene with more than one intersection
+                # multiple times. It checks if the gene ID is already present in the list of gene ids before appending.
+                # The final list will be used to count the amount of (unique) TGFam genes with intersections.
+                # Additionally, we check wheter a gene has more than one intersection, if true, it is put under the
+                # gene list for observation
+
+                ## Genes without disabling mutations
                 if total == 0:
-                    true_genes[f"{tgfam_id}"] = f"{shiu_id}"
-                elif total >= int(relaxation):
-                    relaxed_genes[f"{tgfam_id}"] = f"{shiu_id}"
+
+                    # It already has a reported hit?
+                    # yes? Then put it in observation and remove from previous specific lists
+                    if tgfam_id in [*{**true_genes, **relaxed_genes, **true_pseudogenes}.keys()]:
+
+                        # Moving to observation
+
+                        # Already put in observation (relaxed dict)?
+                        ## Yes?
+                        if tgfam_id in [*{**relaxed_genes}.keys()]:
+                            relaxed_genes[f"{tgfam_id}"].append(f"{shiu_id}") # merge annotations if already present
+                            # remove from other lists since it is being moved to observation
+                        ## No?
+                        else:
+                            relaxed_genes[f"{tgfam_id}"] = [ f"{shiu_id}" ]
+
+                        # remove this gene other lists if it is there
+                        ## From true genes?
+                        if tgfam_id in [*{**true_genes}.keys()]:
+                            bkp = ",".join(true_genes.get(f"{tgfam_id}")) # Get the pseudogene id that were linked to the entry in that list
+                            relaxed_genes[f"{tgfam_id}"].append(bkp) # Append it to its new entry in the observation list
+                            del true_genes[f"{tgfam_id}"]
+                        ## From true pseudogenes?
+                        if tgfam_id in [*{**true_pseudogenes}.keys()]:
+                            bkp = ",".join(true_pseudogenes.get(f"{tgfam_id}")) # Get the pseudogene id that were linked to the entry in that list
+                            relaxed_genes[f"{tgfam_id}"].append(bkp) # Append it to its new entry in the observation list
+                            del true_pseudogenes[f"{tgfam_id}"]
+
+                    # Is its first observation
+                    # Add it to the intact gene count (unique only)
+                    else:
+
+                        ## Already there?
+                        ## Yes?
+                        if tgfam_id in [*{**true_genes}.keys()]:
+                            true_genes[f"{tgfam_id}"].append(f"{shiu_id}") # merge annotations if already present
+                        ## No?
+                        else:
+                            true_genes[f"{tgfam_id}"] = [ f"{shiu_id}" ]
+
+                ## Genes with relaxed disabling mutations thresholds
+                elif total > 0 and total >= int(relaxation):
+
+                    # It already has a reported hit?
+                    # yes? Then put it in observation and remove from previous specific lists
+                    if tgfam_id in [*{**true_genes, **relaxed_genes, **true_pseudogenes}.keys()]:
+
+                        # Moving to observation
+
+                        # Already put in observation (relaxed dict)?
+                        ## Yes?
+                        if tgfam_id in [*{**relaxed_genes}.keys()]:
+                            relaxed_genes[f"{tgfam_id}"].append(f"{shiu_id}") # merge annotations if already present
+                            # remove from other lists since it is being moved to observation
+                        ## No?
+                        else:
+                            relaxed_genes[f"{tgfam_id}"] = [ f"{shiu_id}" ]
+
+                        # remove this gene other lists if it is there
+                        ## From true genes?
+                        if tgfam_id in [*{**true_genes}.keys()]:
+                            bkp = ",".join(true_genes.get(f"{tgfam_id}")) # Get the pseudogene id that were linked to the entry in that list
+                            relaxed_genes[f"{tgfam_id}"].append(bkp) # Append it to its new entry in the observation list
+                            del true_genes[f"{tgfam_id}"]
+                        ## From true pseudogenes?
+                        if tgfam_id in [*{**true_pseudogenes}.keys()]:
+                            bkp = ",".join(true_pseudogenes.get(f"{tgfam_id}")) # Get the pseudogene id that were linked to the entry in that list
+                            relaxed_genes[f"{tgfam_id}"].append(bkp) # Append it to its new entry in the observation list
+                            del true_pseudogenes[f"{tgfam_id}"]
+
+                    # Is its first observation
+                    # Add it to the intact gene count (unique only)
+                    else:
+
+                        ## Already there?
+                        ## Yes?
+                        if tgfam_id in [*{**relaxed_genes}.keys()]:
+                            relaxed_genes[f"{tgfam_id}"].append(f"{shiu_id}") # merge annotations if already present
+                        ## No?
+                        else:
+                            relaxed_genes[f"{tgfam_id}"] = [ f"{shiu_id}" ]
+
+                ## Genes with lots of disabling mutations
                 else:
-                    true_pseudogenes[f"{tgfam_id}"] = f"{shiu_id}"
+
+                    # It already has a reported hit?
+                    # yes? Then put it in observation and remove from previous specific lists
+                    if tgfam_id in [*{**true_genes, **relaxed_genes, **true_pseudogenes}.keys()]:
+
+                        # Moving to observation
+
+                        # Already put in observation (relaxed dict)?
+                        ## Yes?
+                        if tgfam_id in [*{**relaxed_genes}.keys()]:
+                            relaxed_genes[f"{tgfam_id}"].append(f"{shiu_id}") # merge annotations if already present
+                            # remove from other lists since it is being moved to observation
+                        ## No?
+                        else:
+                            relaxed_genes[f"{tgfam_id}"] = [ f"{shiu_id}" ]
+
+                        # remove this gene other lists if it is there
+                        ## From true genes?
+                        if tgfam_id in [*{**true_genes}.keys()]:
+                            bkp = ",".join(true_genes.get(f"{tgfam_id}")) # Get the pseudogene id that were linked to the entry in that list
+                            relaxed_genes[f"{tgfam_id}"].append(bkp) # Append it to its new entry in the observation list
+                            del true_genes[f"{tgfam_id}"]
+                        ## From true pseudogenes?
+                        if tgfam_id in [*{**true_pseudogenes}.keys()]:
+                            bkp = ",".join(true_pseudogenes.get(f"{tgfam_id}")) # Get the pseudogene id that were linked to the entry in that list
+                            relaxed_genes[f"{tgfam_id}"].append(bkp) # Append it to its new entry in the observation list
+                            del true_pseudogenes[f"{tgfam_id}"]
+
+                    # Is its first observation
+                    # Add it to the intact gene count (unique only)
+                    else:
+
+                        ## Already there?
+                        ## Yes?
+                        if tgfam_id in [*{**true_pseudogenes}.keys()]:
+                            true_pseudogenes[f"{tgfam_id}"].append(f"{shiu_id}") # merge annotations if already present
+                        ## No?
+                        else:
+                            true_pseudogenes[f"{tgfam_id}"] = [ f"{shiu_id}" ]
 
             # Save ids to lists
             os.system(f"mkdir -p {current_dir}/gene_ids")
@@ -275,18 +458,21 @@ TGFam gene ids and Pseudogene ids will be stored at:
             with open(f"{current_dir}/gene_ids/accepted_as_genes_ids.txt", "w") as outfile:
                 print("TGFam ID\tPseudogene ID", file=outfile)
                 for key, value in true_genes.items():
+                    value = ",".join(value)
                     print(f"{key}\t{value}", file=outfile)
 
             ## relaxed genes
             with open(f"{current_dir}/gene_ids/relaxed_genes_ids.txt", "w") as outfile:
                 print("TGFam ID\tPseudogene ID", file=outfile)
                 for key, value in relaxed_genes.items():
+                    value = ",".join(value)
                     print(f"{key}\t{value}", file=outfile)
 
             ## Pseudogenes
-            with open(f"{current_dir}/gene_ids/accepted_as_Pseudogenes_ids.txt", "w") as outfile:
+            with open(f"{current_dir}/gene_ids/accepted_as_pseudogenes_ids.txt", "w") as outfile:
                 print("TGFam ID\tPseudogene ID", file=outfile)
                 for key, value in true_pseudogenes.items():
+                    value = ",".join(value)
                     print(f"{key}\t{value}", file=outfile)
 
             ## Save promoted Pseudogenes in its MAIN list
@@ -307,19 +493,20 @@ Everything based on the intersection of Pseudogenes and TGFam annotations.
 Explanations:
 
 * "True genes"      -- True genes are all the genes from TGFam that we will accept as genes.
-                       it contains all the genes that do not had a single base overlap with
+                       It contains all the genes that do not had a single base overlap with
                        any of the predicted Pseudogenes in addition to the genes that had any
-                       overlap with Pseudogenes without disabling mutations. These former
-                       Pseudogenes will be removed from Shiu's final results
+                       overlap with (only one) Pseudogenes without disabling mutations. These
+                       former Pseudogenes will be removed from Shiu's final results
 
 * "Relaxed genes"   -- Relaxed genes are all the genes from TGFam that had any overlap with
-                       Pseudogenes with 1 to {relaxation} disabling mutations. These are genes
+                       Pseudogenes with 1 to {relaxation} disabling mutations or genes that
+                       have hits (intersections) to more than one pseudogene. These are genes
                        that we maintain in observation due to the possibility of problems with
                        the sequencing technology. These former Pseudogenes will be removed from
                        Shiu's final results
 
 * "Relegated genes" -- Relegated genes are all the genes from TGFam that had any overlap with
-                       Pseudogenes with more than {relaxation} disabling mutations. These will
+                       (only one) Pseudogenes with more than {relaxation} disabling mutations. These will
                        be accepted as true Pseudogenes, maintaining Shiu's annotation and
                        removing them from TGFam's final results.
             """
