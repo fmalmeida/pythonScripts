@@ -12,10 +12,10 @@ Usage:
     run_blasts.py
     run_blasts.py -h|--help
     run_blasts.py -v|--version
-    run_blasts.py blastn  [--query <fasta> --db <db> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int>]
-    run_blasts.py blastp  [--query <fasta> --db <db> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int>]
-    run_blasts.py blastx  [--query <fasta> --db <db> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int>]
-    run_blasts.py tblastn [--query <fasta> --db <db> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int>]
+    run_blasts.py blastn  [--query <fasta> --db <db> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int> --2way]
+    run_blasts.py blastp  [--query <fasta> --db <db> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int> --2way]
+    run_blasts.py blastx  [--query <fasta> --db <db> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int> --2way]
+    run_blasts.py tblastn [--query <fasta> --db <db> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int> --2way]
 
 Options:
     -h --help                   Show this screen.
@@ -54,8 +54,11 @@ def blastn(query, db, culling, minid, mincov, out, threads):
 
     # Run blastn
     os.system(f"echo \"qseqid\tqstart\tqend\tqlen\tsseqid\tsstart\tsend\tslen\tevalue\tlength\tpident\tgaps\tgapopen\tstitle\" > {out}")
-    os.system(f"blastn -query {query} -db {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
-    awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov && (($10 - $12) / $4 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
+
+    if arguments['--2way']:
+        print("twoway")
+        os.system(f"blastn -query {query} -db {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
+        awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov && (($10 - $12) / $4 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
 
 ########################
 ### TBLASTN function ###
