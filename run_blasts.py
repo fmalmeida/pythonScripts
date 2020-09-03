@@ -55,7 +55,7 @@ def blastn(query, db, culling, minid, mincov, out, threads):
     # Run blastn
     os.system(f"echo \"qseqid\tqstart\tqend\tqlen\tsseqid\tsstart\tsend\tslen\tevalue\tlength\tpident\tgaps\tgapopen\tstitle\" > {out}")
     os.system(f"blastn -query {query} -db {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
-    awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
+    awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov) && (($10 - $12) / $4 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
 
 ########################
 ### TBLASTN function ###
@@ -68,7 +68,7 @@ def tblastn(query, db, culling, minid, mincov, out, threads):
     # Run blastn
     os.system(f"echo \"qseqid\tqstart\tqend\tqlen\tsseqid\tsstart\tsend\tslen\tevalue\tlength\tpident\tgaps\tgapopen\tstitle\" > {out}")
     os.system(f"tblastn -query {query} -db {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
-    awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
+    awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov) && (($10 - $12) / $4 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
 
 #######################
 ### BLASTX function ###
@@ -81,7 +81,7 @@ def blastx(query, db, culling, minid, mincov, out, threads):
     # Run blastn
     os.system(f"echo \"qseqid\tqstart\tqend\tqlen\tsseqid\tsstart\tsend\tslen\tevalue\tlength\tpident\tgaps\tgapopen\tstitle\" > {out}")
     os.system(f"diamond blastx --query {query} --db {db} --outfmt {outfmt} --max-target-seqs {culling} \
-    --threads {threads} --id {minid} --subject-cover {mincov} >> {out} ")
+    --threads {threads} --id {minid} --subject-cover {mincov} --query-cover {mincov} >> {out} ")
 
 #######################
 ### BLASTP function ###
@@ -94,7 +94,7 @@ def blastp(query, db, culling, minid, mincov, out, threads):
     # Run blastn
     os.system(f"echo \"qseqid\tqstart\tqend\tqlen\tsseqid\tsstart\tsend\tslen\tevalue\tlength\tpident\tgaps\tgapopen\tstitle\" > {out}")
     os.system(f"diamond blastp --query {query} --db {db} --outfmt {outfmt} --max-target-seqs {culling} \
-    --threads {threads} --id {minid} --subject-cover {mincov} >> {out} ")
+    --threads {threads} --id {minid} --subject-cover {mincov} --query-cover {mincov} >> {out} ")
 
 ########################
 ### Summary function ###
