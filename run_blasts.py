@@ -12,14 +12,18 @@ Usage:
     run_blasts.py
     run_blasts.py -h|--help
     run_blasts.py -v|--version
-    run_blasts.py blastn  [--query <fasta> --db <db> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int> --2way]
-    run_blasts.py blastp  [--query <fasta> --db <db> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int> --2way]
-    run_blasts.py blastx  [--query <fasta> --db <db> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int> --2way]
-    run_blasts.py tblastn [--query <fasta> --db <db> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int> --2way]
+    run_blasts.py blastn   [--query <fasta> --db <db> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int> --2way]
+    run_blasts.py blastp   [--query <fasta> --db <db> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int> --2way]
+    run_blasts.py blastx   [--query <fasta> --db <db> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int> --2way]
+    run_blasts.py tblastn  [--query <fasta> --db <db> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int> --2way]
 
 Options:
     -h --help                   Show this screen.
     -v --version                Show version information
+    --2way                      Sets the pipeline to filter alignments by coverage in a 2way manner.
+                                Which means an alignment must cover at least n from the query and
+                                subject lengths. Otherwise it just needs to cover n from subject seq.
+                                This method is good when the query are gene sequences and not genomes.
     --query=<fasta>             Query genome or genes to be searched.
     --db=<db>                   Blast or Diamond database to be used.
     --minid=<int>               Min. Identity percentage for gene annotation [default: 80]
@@ -56,9 +60,11 @@ def blastn(query, db, culling, minid, mincov, out, threads):
     os.system(f"echo \"qseqid\tqstart\tqend\tqlen\tsseqid\tsstart\tsend\tslen\tevalue\tlength\tpident\tgaps\tgapopen\tstitle\" > {out}")
 
     if arguments['--2way']:
-        print("twoway")
         os.system(f"blastn -query {query} -db {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
         awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov && (($10 - $12) / $4 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
+    else:
+        os.system(f"blastn -query {query} -db {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
+        awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
 
 ########################
 ### TBLASTN function ###
@@ -70,8 +76,13 @@ def tblastn(query, db, culling, minid, mincov, out, threads):
 
     # Run blastn
     os.system(f"echo \"qseqid\tqstart\tqend\tqlen\tsseqid\tsstart\tsend\tslen\tevalue\tlength\tpident\tgaps\tgapopen\tstitle\" > {out}")
-    os.system(f"tblastn -query {query} -db {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
-    awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov && (($10 - $12) / $4 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
+
+    if arguments['--2way']:
+        os.system(f"tblastn -query {query} -db {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
+        awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov && (($10 - $12) / $4 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
+    else:
+        os.system(f"tblastn -query {query} -db {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
+        awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
 
 #######################
 ### BLASTX function ###
@@ -83,8 +94,13 @@ def blastx(query, db, culling, minid, mincov, out, threads):
 
     # Run blastn
     os.system(f"echo \"qseqid\tqstart\tqend\tqlen\tsseqid\tsstart\tsend\tslen\tevalue\tlength\tpident\tgaps\tgapopen\tstitle\" > {out}")
-    os.system(f"diamond blastx --query {query} --db {db} --outfmt {outfmt} --max-target-seqs {culling} \
-    --threads {threads} --id {minid} --subject-cover {mincov} --query-cover {mincov} >> {out} ")
+
+    if arguments['--2way']:
+        os.system(f"diamond blastx --query {query} --db {db} --outfmt {outfmt} --max-target-seqs {culling} \
+        --threads {threads} --id {minid} --subject-cover {mincov} --query-cover {mincov} >> {out} ")
+    else:
+        os.system(f"diamond blastx --query {query} --db {db} --outfmt {outfmt} --max-target-seqs {culling} \
+        --threads {threads} --id {minid} --subject-cover {mincov} >> {out} ")
 
 #######################
 ### BLASTP function ###
@@ -96,8 +112,13 @@ def blastp(query, db, culling, minid, mincov, out, threads):
 
     # Run blastn
     os.system(f"echo \"qseqid\tqstart\tqend\tqlen\tsseqid\tsstart\tsend\tslen\tevalue\tlength\tpident\tgaps\tgapopen\tstitle\" > {out}")
-    os.system(f"diamond blastp --query {query} --db {db} --outfmt {outfmt} --max-target-seqs {culling} \
-    --threads {threads} --id {minid} --subject-cover {mincov} --query-cover {mincov} >> {out} ")
+
+    if arguments['--2way']:
+        os.system(f"diamond blastp --query {query} --db {db} --outfmt {outfmt} --max-target-seqs {culling} \
+        --threads {threads} --id {minid} --subject-cover {mincov} --query-cover {mincov} >> {out} ")
+    else:
+        os.system(f"diamond blastp --query {query} --db {db} --outfmt {outfmt} --max-target-seqs {culling} \
+        --threads {threads} --id {minid} --subject-cover {mincov} >> {out} ")
 
 ########################
 ### Summary function ###
