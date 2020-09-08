@@ -72,16 +72,16 @@ def blastn(query, db, culling, minid, mincov, out, threads):
 def tblastn(query, db, culling, minid, mincov, out, threads):
 
     # Outfmt
-    outfmt="6 qseqid qstart qend qlen sseqid sstart send slen evalue length pident gaps gapopen stitle"
+    outfmt="6 sseqid sstart send slen qseqid qstart qend qlen evalue length pident gaps gapopen stitle"
 
     # Run blastn
     os.system(f"echo \"qseqid\tqstart\tqend\tqlen\tsseqid\tsstart\tsend\tslen\tevalue\tlength\tpident\tgaps\tgapopen\tstitle\" > {out}")
 
     if arguments['--2way']:
-        os.system(f"tblastn -query {query} -db {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
+        os.system(f"tblastn -subject {query} -query {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
         awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov && (($10 - $12) / $4 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
     else:
-        os.system(f"tblastn -query {query} -db {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
+        os.system(f"tblastn -subject {query} -query {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
         awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
 
 #######################
