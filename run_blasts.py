@@ -82,7 +82,7 @@ def tblastn(query, db, culling, minid, mincov, out, threads):
         awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov && (($10 - $12) / $4 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
     else:
         os.system(f"tblastn -subject {query} -query {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
-        awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $4 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
+        awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
 
 #######################
 ### BLASTX function ###
