@@ -78,10 +78,10 @@ def tblastn(query, db, culling, minid, mincov, out, threads):
     os.system(f"echo \"qseqid\tqstart\tqend\tqlen\tsseqid\tsstart\tsend\tslen\tevalue\tlength\tpident\tgaps\tgapopen\tstitle\" > {out}")
 
     if arguments['--2way']:
-        os.system(f"tblastn -subject {query} -query {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
+        os.system(f"tblastn -subject {query} -query {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} | \
         awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov && (($10 - $12) / $4 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
     else:
-        os.system(f"tblastn -subject {query} -query {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
+        os.system(f"tblastn -subject {query} -query {db} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} | \
         awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
 
 #######################
