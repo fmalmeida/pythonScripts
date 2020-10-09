@@ -6,18 +6,23 @@
 Ask mongo: This command allows you to ask/interrogate the mongo dbs in your machine
 
 usage:
-    ask-mongo.py [ -h|--help ] [ --list_dbs ]
-    ask-mongo.py [ --db <db_name> --list_collections ]
-    ask-mongo.py [ --db <db_name> --collection <collection_name> ] [ --overview ]
+    ask-mongo.py [ -h|--help ]
+    ask-mongo.py [ --dbpath <db_path> ] [ --list_dbs ]
+    ask-mongo.py [ --dbpath <db_path> ] [ --db <db_name> --list_collections ]
+    ask-mongo.py [ --dbpath <db_path> ] [ --db <db_name> --collection <collection_name> ] [ --overview ] [ --subfield <subfield> --key <key> --val <val> ]
 
 options:
 
     -h, --help                                               Show this screen
+    --dbpath=<db_path>                                       Where you have saved your dbs? Data directory of your mongo dbs. [Default: /data/db]
     --list_dbs                                               List available mongo dbs in your system
     --db=<db_name>                                           Mongo DB to be queryed
     --list_collections                                       Check the available collections in a given database
     --collection=<collection_name>                           Collection name (from mongo db) to be queryed
     --overview                                               Documents in a given collection (from a mongo db)
+    --subfield=<subfield>                                    Is your key/val inside a subfield (a nested document)? Give the name.
+    --key=<key>                                              Query a collection for documents based on which key?
+    --val=<val>                                              What to search in this key?
 
 example:
 """
@@ -41,19 +46,30 @@ from bson.objectid import ObjectId
 ########################
 ### Useful functions ###
 ########################
+def start_mongod(db_path):
+
+    try:
+        # Function to start mongo shell if not started yet
+        os.system(f"mongod --dbpath {db_path} --syslog --fork &> /dev/null")
+    except:
+        pass
 
 #########################
 ### Check your mongos ###
 #########################
 def check_mongos():
 
-    # Start message
-    print("""
-    The available mondo dbs found in your system are:\n
-    """)
+    # Create connection
+    client = MongoClient()
+
+    # Get dbs
+    dbs = client.list_database_names()
 
     # Print databases
-    os.system('mongo --quiet --eval  "printjson(db.adminCommand(\'listDatabases\'))"')
+    print(f"\nThe available mondo dbs found in your system are: {dbs}\n")
+
+    # Close client
+    client.close()
 
 #######################################
 ### Check collections in a database ###
@@ -107,11 +123,40 @@ def collection_overview(db_name, collection_name):
     print(f"Here it is an example of one document of the collection:\n")
     pprint.pprint(example)
 
+####################
+### Get Document ###
+####################
+def get_doc(db_name, collection_name, key, val, subfield):
+
+    # Create connection
+    client = MongoClient()
+
+    # Open Database
+    db = client[db_name]
+
+    # Open collection
+    collection = db[collection_name]
+
+    # Find my document
+    if key == '_id':
+        results = collection.find({ key: ObjectId(val) })
+    elif subfield != None:
+        results = collection.find({ f"{subfield}.{key}" : val })
+    else:
+        results = collection.find({ key: val })
+
+    # Print
+    for doc in results:
+        pprint.pprint(doc)
+
 ################
 ### Def main ###
 ################
 if __name__ == '__main__':
     args = docopt(__doc__, version='v1.0 by Felipe Marques de Almeida')
+
+    # Start db (if not started)
+    start_mongod(db_path=args['--dbpath'])
 
     ## Help
     if args['--help']:
@@ -129,6 +174,9 @@ if __name__ == '__main__':
     elif args['--collection'] and args['--db']:
         if args['--overview']:
             collection_overview(db_name=args['--db'], collection_name=args['--collection'])
+        elif args['--key'] and args['--val']:
+            get_doc(db_name=args['--db'], collection_name=args['--collection'], key=args['--key'], val=args['--val'],
+                    subfield=args['--subfield'])
 
     ## None
     else:
