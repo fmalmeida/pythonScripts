@@ -66,10 +66,10 @@ def main():
             print(usage_tsv2markdown.strip())
 
         elif args['--tsv']:
-            file2mw(args['--tsv'], '\t')
+            file2mw(args['--tsv'], '\t', args['--header'])
 
         elif args['--csv']:
-            file2mw(arguments['--csv'], ',')
+            file2mw(arguments['--csv'], ',', args['--header'])
 
         else:
             print(usage_tsv2markdown.strip())

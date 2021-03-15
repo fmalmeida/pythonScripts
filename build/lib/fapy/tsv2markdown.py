@@ -35,7 +35,7 @@ def header2list(header):
 ###################################
 ### Convert with header in file ###
 ###################################
-def file2mw(filep, fsep):
+def file2mw(filep, fsep, header):
 
     # read data.frame
     with open(filep) as file_in:
@@ -44,7 +44,7 @@ def file2mw(filep, fsep):
             lines.append(line.split(fsep))
 
     # generate tabulate
-    if arguments['--header']:
+    if header:
         print(tabulate(lines, headers=header2list(arguments['--header']), tablefmt="github"))
     else:
         print(tabulate(lines, headers="firstrow", tablefmt="github"))
