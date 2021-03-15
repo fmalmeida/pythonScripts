@@ -1,15 +1,28 @@
-# About
+# fa-py (Felipe Almeida python scripts)
 
-This repository was created with the only reason to store my Python Scripts that shall eventually be used more than once.
+This repository has been turned into an installable python package in order to facilitate the distribution of my custom python scripts and, in turn, make them easier to execute.
 
-Feel free to comment some if you believe it can be improved also, feel free to use.
+## Installation
 
-# Contact
+Installation is super easy and perhaps not required:
 
-## Name
+```bash
+# Download
+git clone https://github.com/fmalmeida/pythonScripts.git
+cd pythonScripts
 
-Felipe Marques de Almeida
+# Run without installing
+python3 fa-py-runner.py -h
 
-## Email
+# Install and run in any place
+python3 setup.py install
+fa-py -h
+```
 
-falmeida@aluno.unb.br
+## License
+
+This repository has no warranty and is free to use, modify and share under GNU GENERAL PUBLIC LICENSE version 3.
+
+## Contact
+
+Felipe Almeida <almeidafmarques@gmail.com>
