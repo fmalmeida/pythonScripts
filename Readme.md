@@ -19,6 +19,10 @@ python3 setup.py install
 fa-py -h
 ```
 
+## Old scripts
+
+All my python scripts as single scripts, that may or may not be included in the package are available in the `bkp` folder!
+
 ## License
 
 This repository has no warranty and is free to use, modify and share under GNU GENERAL PUBLIC LICENSE version 3.
