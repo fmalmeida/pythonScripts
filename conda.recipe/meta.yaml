@@ -22,6 +22,7 @@ requirements:
     - setuptools
     - setuptools-git
     - pandas
+    - tabulate
 
 channels:
   - anaconda
