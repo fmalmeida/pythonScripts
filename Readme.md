@@ -17,6 +17,28 @@ python3 fa-py-runner.py -h
 # Install and run in any place
 python3 setup.py install
 fa-py -h
+
+# help
+fa-py: a package to the simple distribution of my custom scripts.
+
+Copyright (C) 2021 Felipe Marques de Almeida (almeidafmarques@gmail.com)
+License: Public Domain
+
+usage:
+    fa-py [ -h|--help ] [ -v|--version ] [ --license ]
+    fa-py <command> [ -h|--help ] [ <args>... ]
+
+options:
+    -h --help                                               Show this screen
+    -v --version                                            Show version information
+    --license                                               Show LEGAL LICENSE information
+
+commands:
+    tsv2markdown                                            Command for rapid convertion of tsv or csv to markdown tables.
+    splitgbk                                                Command to split multisequence genbank files into individual files.
+    blasts                                                  Command to execute automatized blast commands.
+
+Use: `fa-py <commmand> -h` to get more help and see examples.
 ```
 
 ## Old scripts

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 license="""
-Copyright 2020 Felipe Almeida (almeidafmarques@gmail.com)
+Copyright 2021 Felipe Almeida (almeidafmarques@gmail.com)
 https://github.com/fmalmeida/pythonScripts
 
 This file is part of my custom python scripts (fa-py) package, which is free: you can redistribute it and/or modify
@@ -107,20 +107,18 @@ def main():
             print(usage_blasts.strip())
 
         elif args['--query'] and args['--subject']:
-            ## blastn
-            if args['--task'].lower() == 'blastn':
-                blastn(query=args['--query'], subject=args['--subject'],
-                       culling=args['--culling_limit'], minid=args['--minid'],
-                       mincov=args['--mincov'], out=args['--out'],
-                       threads=args['--threads'], twoway=args['--2way'])
-            ## blastp
-            if args['--task'].lower() == 'blastp':
-                blastp(query=args['--query'], subject=args['--subject'],
-                       culling=args['--culling_limit'], minid=args['--minid'],
-                       mincov=args['--mincov'], out=args['--out'],
-                       threads=args['--threads'], twoway=args['--2way'])
-            ## summary
-            summary(output=args['--out'])
+
+            ## check if task is correct
+            if args['--task'].lower() in ['blastn', 'tblastn', 'blastp', 'blastx']:
+                ## run blast
+                blast(task=args['--task'].lower(), query=args['--query'],
+                subject=args['--subject'], culling=args['--culling_limit'],
+                minid=args['--minid'], mincov=args['--mincov'], out=args['--out'],
+                threads=args['--threads'], twoway=args['--2way'])
+                ## summary
+                summary(output=args['--out'])
+            else:
+                print(f"PROBLEM!\nI could not understand the task \"{args['--task'].lower()}\", please select one of: blastn, tblastn, blastp or blastx.")
 
         else:
             print(usage_blasts.strip())
