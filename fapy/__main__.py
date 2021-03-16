@@ -31,6 +31,7 @@ options:
 commands:
     tsv2markdown                                            Command for rapid convertion of tsv or csv to markdown tables.
     splitgbk                                                Command to split multisequence genbank files into individual files.
+    blasts                                                  Command to execute automatized blast commands.
 
 Use: `fa-py <commmand> -h` to get more help and see examples.
 """
@@ -48,6 +49,7 @@ import sys
 from .version import *
 from .tsv2markdown import *
 from .splitgbk import *
+from .blasts import *
 
 ## Defining main
 def main():
@@ -92,6 +94,28 @@ def main():
 
         else:
             print(usage_splitgbk.strip())
+
+    ######################
+    ### Blast commands ###
+    ######################
+    elif arguments['<command>'] == 'blasts':
+        # Parse docopt
+        args = docopt(usage_blasts, version=__version__, help=False)
+
+        # Run
+        if args['--help']:
+            print(usage_blasts.strip())
+
+        elif args['--query'] and args['--subject']:
+            if args['--task'].lower() == 'blastn':
+                blastn(query=args['--query'], subject=args['--subject'],
+                       culling=args['--culling_limit'], minid=args['--minid'],
+                       mincov=args['--mincov'], out=args['--out'],
+                       threads=args['--threads'], twoway=args['--2way'])
+                summary(output=args['--out'])
+
+        else:
+            print(usage_blasts.strip())
 
     #####################
     ### Check license ###
