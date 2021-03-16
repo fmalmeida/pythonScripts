@@ -107,12 +107,20 @@ def main():
             print(usage_blasts.strip())
 
         elif args['--query'] and args['--subject']:
+            ## blastn
             if args['--task'].lower() == 'blastn':
                 blastn(query=args['--query'], subject=args['--subject'],
                        culling=args['--culling_limit'], minid=args['--minid'],
                        mincov=args['--mincov'], out=args['--out'],
                        threads=args['--threads'], twoway=args['--2way'])
-                summary(output=args['--out'])
+            ## blastp
+            if args['--task'].lower() == 'blastp':
+                blastp(query=args['--query'], subject=args['--subject'],
+                       culling=args['--culling_limit'], minid=args['--minid'],
+                       mincov=args['--mincov'], out=args['--out'],
+                       threads=args['--threads'], twoway=args['--2way'])
+            ## summary
+            summary(output=args['--out'])
 
         else:
             print(usage_blasts.strip())

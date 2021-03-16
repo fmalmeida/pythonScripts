@@ -52,16 +52,34 @@ def filter(string, substr):
 def blastn(query, subject, culling, minid, mincov, out, threads, twoway):
 
     # Outfmt
-    outfmt="6 qseqid qstart qend qlen sseqid sstart send slen evalue length pident gaps gapopen stitle"
+    outfmt="6 qseqid qstart qend qlen sseqid sstart send slen evalue length pident gaps gapopen bitscore"
 
     # Run blastn
-    os.system(f"echo \"qseqid\tqstart\tqend\tqlen\tsseqid\tsstart\tsend\tslen\tevalue\tlength\tpident\tgaps\tgapopen\tstitle\" > {out}")
+    os.system(f"echo \"qseqid\tqstart\tqend\tqlen\tsseqid\tsstart\tsend\tslen\tevalue\tlength\tpident\tgaps\tgapopen\tbitscore\" > {out}")
 
     if twoway:
         os.system(f"blastn -query {query} -subject {subject} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
         awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov && (($10 - $12) / $4 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
     else:
         os.system(f"blastn -query {query} -subject {subject} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} -perc_identity {minid} | \
+        awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $4 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
+
+#######################
+### BLASTP function ###
+#######################
+def blastp(query, subject, culling, minid, mincov, out, threads, twoway):
+
+    # Outfmt
+    outfmt="6 qseqid qstart qend qlen sseqid sstart send slen evalue length pident gaps gapopen bitscore"
+
+    # Run blastp
+    os.system(f"echo \"qseqid\tqstart\tqend\tqlen\tsseqid\tsstart\tsend\tslen\tevalue\tlength\tpident\tgaps\tgapopen\tbitscore\" > {out}")
+
+    if twoway:
+        os.system(f"blastp -query {query} -subject {subject} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} | \
+        awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov && (($10 - $12) / $4 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
+    else:
+        os.system(f"blastp -query {query} -subject {subject} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} | \
         awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $4 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
 
 ########################
