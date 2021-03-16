@@ -30,6 +30,7 @@ options:
 
 commands:
     tsv2markdown                                            Command for rapid convertion of tsv or csv to markdown tables.
+    splitgbk                                                Command to split multisequence genbank files into individual files.
 
 Use: `fa-py <commmand> -h` to get more help and see examples.
 """
@@ -46,6 +47,7 @@ import sys
 ########################
 from .version import *
 from .tsv2markdown import *
+from .splitgbk import *
 
 ## Defining main
 def main():
@@ -54,7 +56,7 @@ def main():
     arguments = docopt(usage, version=__version__, help=False, options_first=True)
 
     ############################
-    ### GFF tsv2markdown command ###
+    ### tsv2markdown command ###
     ############################
     if arguments['<command>'] == 'tsv2markdown':
 
@@ -73,6 +75,23 @@ def main():
 
         else:
             print(usage_tsv2markdown.strip())
+
+    #########################
+    ### Split gbk command ###
+    #########################
+    elif arguments['<command>'] == 'splitgbk':
+        # Parse docopt
+        args = docopt(usage_splitgbk, version=__version__, help=False)
+
+        # Run
+        if args['--help']:
+            print(usage_splitgbk.strip())
+
+        elif args['--gbk']:
+            splitgbk(args['--gbk'], args['--outdir'])
+
+        else:
+            print(usage_splitgbk.strip())
 
     #####################
     ### Check license ###

@@ -14,8 +14,8 @@ usage:
 
 options:
     -h --help                               Show this screen.
-    --tsv=<file>                            Show tsv file to print as markdown table
-    --csv=<file>                            Show csv file to print as markdown table
+    --tsv=<file>                            Input tsv file to print as markdown table
+    --csv=<file>                            Input csv file to print as markdown table
     --header=<list>                         If file does not have a header, set a
                                             custom header. E.g. --header "Planet,R (km),mass (x 10^29 kg)".
 """
