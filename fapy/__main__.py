@@ -31,6 +31,7 @@ options:
 commands:
     tsv2markdown                                            Command for rapid convertion of tsv or csv to markdown tables.
     splitgbk                                                Command to split multisequence genbank files into individual files.
+    align2subsetgbk                                               Command to subset genbank files based on alignments to a FASTA file.
     blasts                                                  Command to execute automatized blast commands.
 
 Use: `fa-py <commmand> -h` to get more help and see examples.
@@ -50,6 +51,7 @@ from .version import *
 from .tsv2markdown import *
 from .splitgbk import *
 from .blasts import *
+from .usage_align2subsetgbk import *
 
 ## Defining main
 def main():
@@ -122,6 +124,32 @@ def main():
 
         else:
             print(usage_blasts.strip())
+
+    ######################################
+    ### Subset gbk with fasta commands ###
+    ######################################
+    elif arguments['<command>'] == 'align2subsetgbk':
+        # Parse docopt
+        args  = docopt(usage_align2subsetgbk, version=__version__, help=False)
+
+        # Run
+        if args['--help']:
+            print(usage_align2subsetgbk.strip())
+
+        elif args['--gbk'] and args['--fasta']:
+
+            # Run
+            gbk2fasta(gbk=args['--gbk'])
+            blast(task='blastn', query=args['--fasta'], subject='tmp_gbk.fa',
+             culling=args['--culling_limit'], minid=args['--minid'], mincov=args['--mincov'],
+             out='out.blast', threads=1, twoway=None)
+            filtergbk(gbk=args['--gbk'], out=args['--out'], extension=int(args['--extension']))
+
+            # Clean dir
+            os.system(f"rm -rf tmp_gbk.fa out.blast")
+
+        else:
+            print(usage_align2subsetgbk.strip())
 
     #####################
     ### Check license ###
