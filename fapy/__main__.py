@@ -139,6 +139,7 @@ def main():
         elif args['--gbk'] and args['--fasta']:
 
             # Run
+            print(f"Processing file: {args['--gbk']}!")
             gbk2fasta(gbk=args['--gbk'])
             blast(task='blastn', query=args['--fasta'], subject='tmp_gbk.fa',
              culling=args['--culling_limit'], minid=args['--minid'], mincov=args['--mincov'],

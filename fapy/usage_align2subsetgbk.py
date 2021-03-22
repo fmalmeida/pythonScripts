@@ -54,6 +54,7 @@ def filtergbk(gbk, out, extension):
     f=open(f"{out}", "w")
     # Read blast results
     blast_res = pd.read_csv('out.blast', sep = '\t')
+    print(blast_res)
 
     # Get locus_tags
     contigs = sorted(set(blast_res["sseqid"].tolist()))
@@ -62,15 +63,22 @@ def filtergbk(gbk, out, extension):
     filtered = []
     for contig in contigs:
         for seq_record in SeqIO.parse(gbk, 'genbank'):
-            if contig == seq_record.id:
+            if str(contig) == str(seq_record.id):
                 small_df = blast_res[blast_res['sseqid'].isin([seq_record.id])]
                 for index, row in small_df.iterrows():
                     for features in seq_record.features:
-                        if int(features.location.start) >= int(row["sstart"] - extension) and int(features.location.start) <= int(row["send"] + extension) and features.type != "source":
-                            filtered.append(features)
+                        # plus strand
+                        if int(row["sstart"]) <= int(row["send"]):
+                            if int(features.location.start) >= int(row["sstart"] - extension) and int(features.location.start) <= int(row["send"] + extension) and features.type != "source":
+                                filtered.append(features)
+                        # minus strand
+                        elif int(row["sstart"]) >= int(row["send"]):
+                            if int(features.location.start) >= int(row["send"] - extension) and int(features.location.start) <= int(row["sstart"] + extension) and features.type != "source":
+                                filtered.append(features)
             else:
                 pass
-    # Print results
-    seq_record.features = filtered
-    if len(seq_record.features) > 0:
-        SeqIO.write(seq_record, f, 'gb')
+
+        # Print results
+        seq_record.features = filtered
+        if len(seq_record.features) > 0:
+            SeqIO.write(seq_record, f, 'gb')
