@@ -60,10 +60,10 @@ def filtergbk(gbk, out, extension):
     contigs = sorted(set(blast_res["sseqid"].tolist()))
 
     # Subset
-    filtered = []
     for contig in contigs:
         for seq_record in SeqIO.parse(gbk, 'genbank'):
             if str(contig) == str(seq_record.id):
+                filtered = []
                 small_df = blast_res[blast_res['sseqid'].isin([seq_record.id])]
                 for index, row in small_df.iterrows():
                     for features in seq_record.features:
@@ -75,10 +75,10 @@ def filtergbk(gbk, out, extension):
                         elif int(row["sstart"]) >= int(row["send"]):
                             if int(features.location.start) >= int(row["send"] - extension) and int(features.location.start) <= int(row["sstart"] + extension) and features.type != "source":
                                 filtered.append(features)
+
+                # Print results
+                seq_record.features = filtered
+                if len(seq_record.features) > 0:
+                    SeqIO.write(seq_record, f, 'gb')
             else:
                 pass
-
-        # Print results
-        seq_record.features = filtered
-        if len(seq_record.features) > 0:
-            SeqIO.write(seq_record, f, 'gb')
