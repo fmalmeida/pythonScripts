@@ -14,8 +14,8 @@ cd pythonScripts
 # Run without installing
 python3 fa-py-runner.py -h
 
-# Install and run in any place
-python3 setup.py install
+# Or install with pip and run anywhere
+pip install git+git://github.com/fmalmeida/pythonScripts.git
 fa-py -h
 
 # help
