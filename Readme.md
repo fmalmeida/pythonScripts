@@ -21,7 +21,7 @@ fa-py -h
 # help
 fa-py: a package to the simple distribution of my custom scripts.
 
-Copyright (C) 2021 Felipe Marques de Almeida (almeidafmarques@gmail.com)
+Copyright (C) 2020 Felipe Marques de Almeida (almeidafmarques@gmail.com)
 License: Public Domain
 
 usage:
@@ -36,6 +36,7 @@ options:
 commands:
     tsv2markdown                                            Command for rapid convertion of tsv or csv to markdown tables.
     splitgbk                                                Command to split multisequence genbank files into individual files.
+    align2subsetgbk                                               Command to subset genbank files based on alignments to a FASTA file.
     blasts                                                  Command to execute automatized blast commands.
 
 Use: `fa-py <commmand> -h` to get more help and see examples.
