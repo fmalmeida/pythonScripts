@@ -45,6 +45,6 @@ def file2mw(filep, fsep, header):
 
     # generate tabulate
     if header:
-        print(tabulate(lines, headers=header2list(arguments['--header']), tablefmt="github"))
+        print(tabulate(lines, headers=header2list(header), tablefmt="github"))
     else:
         print(tabulate(lines, headers="firstrow", tablefmt="github"))
