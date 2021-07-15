@@ -15,7 +15,7 @@ cd pythonScripts
 python3 fa-py-runner.py -h
 
 # Or install with pip and run anywhere
-pip install git+git://github.com/fmalmeida/pythonScripts.git
+pip install setup.py
 fa-py -h
 
 # help
