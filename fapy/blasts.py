@@ -47,15 +47,26 @@ def blast(task, query, subject, culling, minid, mincov, out, threads, twoway):
     # Outfmt
     outfmt="6 qseqid qstart qend qlen sseqid sstart send slen evalue length pident gaps gapopen bitscore"
 
-    # Run blastn
+    # format header
     os.system(f"echo \"qseqid\tqstart\tqend\tqlen\tsseqid\tsstart\tsend\tslen\tevalue\tlength\tpident\tgaps\tgapopen\tbitscore\" > {out}")
 
+    # format db
+    if task == "blastn" or task == "tblastn":
+        db_type = "nucl"
+    elif task == "blastx" or task == "blastp":
+        db_type = "prot"
+    os.system(f"makeblastdb -in {subject} -parse_seqids -out ./FA-PY-SUBJECT-DB -dbtype {db_type} 1> /dev/null")
+
+    # run blast
     if twoway:
-        os.system(f"{task} -query {query} -subject {subject} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} | \
+        os.system(f"{task} -query {query} -db ./FA-PY-SUBJECT-DB -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} | \
         awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $8 * 100) >= mincov && (($10 - $12) / $4 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
     else:
-        os.system(f"{task} -query {query} -subject {subject} -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} | \
+        os.system(f"{task} -query {query} -db ./FA-PY-SUBJECT-DB -outfmt \"{outfmt}\" -num_threads {threads} -culling_limit {culling} | \
         awk -v minid={minid} -v mincov={mincov} '{{ if ($11 >= minid && (($10 - $12) / $4 * 100) >= mincov) {{print $0}}  }}' >> {out} ")
+
+    # clear work dir
+    os.system("rm -rf ./FA-PY-SUBJECT-DB*")
 
 ########################
 ### Summary function ###
