@@ -31,8 +31,9 @@ options:
 commands:
     tsv2markdown                                            Command for rapid convertion of tsv or csv to markdown tables.
     splitgbk                                                Command to split multisequence genbank files into individual files.
-    align2subsetgbk                                               Command to subset genbank files based on alignments to a FASTA file.
+    align2subsetgbk                                         Command to subset genbank files based on alignments to a FASTA file.
     blasts                                                  Command to execute automatized blast commands.
+    replace_fasta_seq                                       Command to replace strings in a FASTA using defitinitions from a BED file
 
 Use: `fa-py <commmand> -h` to get more help and see examples.
 """
@@ -41,8 +42,6 @@ Use: `fa-py <commmand> -h` to get more help and see examples.
 ### Loading Necessary Packages ###
 ##################################
 from docopt import docopt
-from subprocess import call
-import sys
 
 ########################
 ### Import functions ###
@@ -51,7 +50,8 @@ from .version import *
 from .tsv2markdown import *
 from .splitgbk import *
 from .blasts import *
-from .usage_align2subsetgbk import *
+from .align2subsetgbk import *
+from .replace_fasta_seq import *
 
 ## Defining main
 def main():
@@ -151,6 +151,27 @@ def main():
 
         else:
             print(usage_align2subsetgbk.strip())
+    
+    ###################################
+    ### Replace fasta seq using bed ###
+    ###################################
+    elif arguments['<command>'] == 'replace_fasta_seq':
+        # Parse docopt
+        args = docopt(usage_replace_fasta_seq, version=__version__, help=False)
+
+        # Run
+        if args['--help']:
+            print(usage_replace_fasta_seq.strip())
+
+        elif args['--fasta'] and args['--bed']:
+
+            # Run
+            print(f"Processing file: {args['--fasta']}!")
+            replace_fasta_seq(input=args['--fasta'], bed=args['--bed'], output=args['--out'], sep=args['--sep'])
+            print(f"Done!")
+
+        else:
+            print(usage_replace_fasta_seq.strip())
 
     #####################
     ### Check license ###

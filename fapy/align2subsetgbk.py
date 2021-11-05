@@ -32,10 +32,7 @@ Options:
 ##################################
 from docopt import docopt
 from Bio import SeqIO
-from io import StringIO
 import pandas as pd
-import os
-import sys
 from .blasts import *
 
 ##########################################
