@@ -16,6 +16,11 @@ requirements:
   build:
     - python >=3.7,{{PY_VER}}*
     - setuptools
+    - setuptools-git
+    - pandas
+    - tabulate
+    - docopt
+    - biopython
 
   run:
     - python {{PY_VER}}*
@@ -23,6 +28,8 @@ requirements:
     - setuptools-git
     - pandas
     - tabulate
+    - docopt
+    - biopython
 
 channels:
   - anaconda
