@@ -20,8 +20,7 @@ python3 fa-py-runner.py -h
 # Or install with conda and run anywhere
 conda install -c anaconda -c conda-forge -c bioconda -c falmeida fa-py
 
-# Or install with pip and run anywhere
-pip install git+git://github.com/fmalmeida/pythonScripts.git
+# check installation
 fa-py -h
 ```
 
