@@ -31,7 +31,6 @@ Comments:
 ##################################
 ### Loading Necessary Packages ###
 ##################################
-from docopt import docopt
 from Bio import SeqIO
 
 ##########################
