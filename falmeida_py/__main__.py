@@ -167,7 +167,7 @@ def main():
 
             # Run
             print(f"Processing file: {args['--fasta']}!")
-            replace_fasta_seq(input=args['--fasta'], bed=args['--bed'], output=args['--out'], sep=args['--sep'])
+            replace_fasta_seq(input=args['--fasta'], bed=args['--bed'], output=args['--out'])
             print(f"Done!")
 
         else:
