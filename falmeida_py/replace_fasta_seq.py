@@ -23,7 +23,7 @@ Options:
     -b --bed=<bed>                 BED file with replacement definitions.
 
 Comments:
-    The BED file MUST be a 4 column file with the following format:
+    The BED (start 0-based) file MUST be a 4 column file with the following format:
         contig start end sub_seq
 """
 
@@ -48,7 +48,7 @@ def replace_seq_in_dict(bed, dict):
     with open(bed) as f:
         for line in f:
             contig, start, end, sub_seq = line.strip().split('\t')
-            dict[contig].seq = dict[contig].seq[:int(start) - 1] + sub_seq + dict[contig].seq[int(end):]
+            dict[contig].seq = dict[contig].seq[:int(start)] + sub_seq + dict[contig].seq[int(end):]
 
 ####################
 ### output fasta ###
