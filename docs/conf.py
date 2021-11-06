@@ -97,8 +97,8 @@ html_theme_options = {
     'logo_icon': "book",
 
     # repo info
-    "repo_url": "https://github.com/fmalmeida/plot_nucmer",
-    "repo_name": "plot_nucmer",
+    "repo_url": "https://github.com/fmalmeida/pythonScripts",
+    "repo_name": "fa-py",
     "repo_type": "github",
 }
 html_sidebars = {
