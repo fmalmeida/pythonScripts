@@ -12,3 +12,6 @@ anaconda upload $(find osx-64 -name "fa-py*.tar.bz2") --force
 
 # rm dirs
 rm -rf build osx-64
+
+# save new help message
+python3 fa-py-runner.py -h &> docs/help_message.txt
