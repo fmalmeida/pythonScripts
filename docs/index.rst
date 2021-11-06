@@ -1,6 +1,6 @@
 .. _index:
 
-fa-py (Felipe Almeida python scripts)
+falmeida-py (Felipe Almeida python scripts)
 =====================================
 
 This is just a simple repository of python scripts that I use in a daily basis. Some of them are used in my projects, some are just for fun. Thus, in order to provide a better way to use my scripts throughout machines, I decided to create a package with them.
@@ -16,7 +16,7 @@ Users are advised to create separate conda environments
 .. code-block:: bash
 
    # Get the conda package
-   mamba create -n fa-py conda install -c anaconda -c conda-forge -c bioconda -c falmeida fa-py
+   mamba create -n falmeida-py conda install -c anaconda -c conda-forge -c bioconda -c falmeida falmeida-py
 
 .. TIP:: Users are advised to use `mamba <https://github.com/mamba-org/mamba>`_ since it is faster.
 

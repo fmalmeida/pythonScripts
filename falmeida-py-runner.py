@@ -15,7 +15,7 @@ details. You should have received a copy of the GNU General Public License along
 If not, see <http://www.gnu.org/licenses/>.
 """
 
-from fapy.__main__ import main
+from falmeida_py.__main__ import main
 
 
 if __name__ == '__main__':

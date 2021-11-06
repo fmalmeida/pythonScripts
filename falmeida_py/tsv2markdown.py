@@ -8,9 +8,9 @@ Copyright (C) 2020 Felipe Marques de Almeida (almeidafmarques@gmail.com)
 License: Public Domain
 
 usage:
-    fa-py tsv2markdown
-    fa-py tsv2markdown [ -h|--help ]
-    fa-py tsv2markdown [ --tsv <file> --csv <file> --header <list> ]
+    falmeida-py tsv2markdown
+    falmeida-py tsv2markdown [ -h|--help ]
+    falmeida-py tsv2markdown [ --tsv <file> --csv <file> --header <list> ]
 
 options:
     -h --help                               Show this screen.

@@ -9,10 +9,10 @@ A simple script to automatize the execution and filtering of blast alignments.
 Copyright (C) 2020 Felipe Marques de Almeida (almeidafmarques@gmail.com)
 License: Public Domain
 Usage:
-    fa-py blasts
-    fa-py blasts -h|--help
-    fa-py blasts -v|--version
-    fa-py blasts ( --query <fasta> --subject <subject> ) [ --task <task> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int> --2way ]
+    falmeida-py blasts
+    falmeida-py blasts -h|--help
+    falmeida-py blasts -v|--version
+    falmeida-py blasts ( --query <fasta> --subject <subject> ) [ --task <task> --minid <int> --mincov <int> --culling_limit <int> --out <string> --threads <int> --2way ]
 
 Options:
     -h --help                   Show this screen.

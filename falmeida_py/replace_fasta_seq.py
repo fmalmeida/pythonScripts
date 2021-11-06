@@ -13,8 +13,8 @@ Copyright (C) 2021 Felipe Marques de Almeida (almeidafmarques@gmail.com)
 License: Public Domain
 
 Usage:
-    fa-py replace_fasta_seq [ -h|--help ]
-    fa-py replace_fasta_seq [ --fasta <fasta> --bed <bed> --out <out_fasta>  --sep <sep> ]
+    falmeida-py replace_fasta_seq [ -h|--help ]
+    falmeida-py replace_fasta_seq [ --fasta <fasta> --bed <bed> --out <out_fasta>  --sep <sep> ]
 
 Options:
     -h --help                      Show this screen.

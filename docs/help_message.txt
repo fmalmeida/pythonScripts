@@ -1,11 +1,11 @@
-fa-py: a package to the simple distribution of my custom scripts.
+falmeida-py: a package to the simple distribution of my custom scripts.
 
 Copyright (C) 2020 Felipe Marques de Almeida (almeidafmarques@gmail.com)
 License: Public Domain
 
 usage:
-    fa-py [ -h|--help ] [ -v|--version ] [ --license ]
-    fa-py <command> [ -h|--help ] [ <args>... ]
+    falmeida-py [ -h|--help ] [ -v|--version ] [ --license ]
+    falmeida-py <command> [ -h|--help ] [ <args>... ]
 
 options:
     -h --help                                               Show this screen
@@ -19,4 +19,4 @@ commands:
     blasts                                                  Command to execute automatized blast commands.
     replace_fasta_seq                                       Command to replace strings in a FASTA using defitinitions from a BED file
 
-Use: `fa-py <commmand> -h` to get more help and see examples.
+Use: `falmeida-py <commmand> -h` to get more help and see examples.

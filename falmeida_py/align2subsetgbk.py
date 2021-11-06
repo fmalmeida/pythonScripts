@@ -13,8 +13,8 @@ Copyright (C) 2020 Felipe Marques de Almeida (almeidafmarques@gmail.com)
 License: Public Domain
 
 Usage:
-    fa-py align2subsetgbk [ -h|--help ]
-    fa-py align2subsetgbk [ --gbk <in_gbk> --fasta <fasta> --out <out_gbk> --minid <int> --mincov <int> --culling_limit <int> --extension <int> ]
+    falmeida-py align2subsetgbk [ -h|--help ]
+    falmeida-py align2subsetgbk [ --gbk <in_gbk> --fasta <fasta> --out <out_gbk> --minid <int> --mincov <int> --culling_limit <int> --extension <int> ]
 
 Options:
     -h --help                      Show this screen.

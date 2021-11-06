@@ -17,8 +17,8 @@
 
 # -- Project information -----------------------------------------------------
 
-project   = 'fa-py'
-copyright = '2020, Felipe, Almeida. fa-py: A simple package to index my frequently used python scripts.'
+project   = 'falmeida-py'
+copyright = '2020, Felipe, Almeida. falmeida-py: A simple package to index my frequently used python scripts.'
 author    = 'Felipe Marques de Almeida'
 
 
@@ -98,7 +98,7 @@ html_theme_options = {
 
     # repo info
     "repo_url": "https://github.com/fmalmeida/pythonScripts",
-    "repo_name": "fa-py",
+    "repo_name": "falmeida-py",
     "repo_type": "github",
 }
 html_sidebars = {

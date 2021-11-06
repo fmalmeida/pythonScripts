@@ -8,9 +8,9 @@ Copyright (C) 2020 Felipe Marques de Almeida (almeidafmarques@gmail.com)
 License: Public Domain
 
 usage:
-    fa-py splitgbk
-    fa-py splitgbk [ -h|--help ]
-    fa-py splitgbk [ --gbk <file> ] [ -o|--outdir <outdir> ]
+    falmeida-py splitgbk
+    falmeida-py splitgbk [ -h|--help ]
+    falmeida-py splitgbk [ --gbk <file> ] [ -o|--outdir <outdir> ]
 
 options:
     -h --help                               Show this screen.
