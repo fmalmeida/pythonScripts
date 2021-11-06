@@ -11,7 +11,7 @@ Installation
 Conda package
 """""""""""""
 
-> Users are advised to create separate conda environments
+Users are advised to create separate conda environments
 
 .. code-block:: bash
 
