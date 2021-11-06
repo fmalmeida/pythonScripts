@@ -16,7 +16,7 @@ Users are advised to create separate conda environments
 .. code-block:: bash
 
    # Get the conda package
-   mamba create -n falmeida-py conda install -c anaconda -c conda-forge -c bioconda -c falmeida falmeida-py
+   mamba create -n falmeida-py -c anaconda -c conda-forge -c bioconda -c falmeida falmeida-py
 
 .. TIP:: Users are advised to use `mamba <https://github.com/mamba-org/mamba>`_ since it is faster.
 
