@@ -16,6 +16,7 @@ commands:
     tsv2markdown                                            Command for rapid convertion of tsv or csv to markdown tables.
     splitgbk                                                Command to split multisequence genbank files into individual files.
     align2subsetgbk                                         Command to subset genbank files based on alignments to a FASTA file.
+    gbk2fasta                                               Command to convert genbank files to fasta files.
     blasts                                                  Command to execute automatized blast commands.
     replace_fasta_seq                                       Command to replace strings in a FASTA using defitinitions from a BED file
 
