@@ -32,6 +32,7 @@ commands:
     tsv2markdown                                            Command for rapid convertion of tsv or csv to markdown tables.
     splitgbk                                                Command to split multisequence genbank files into individual files.
     align2subsetgbk                                         Command to subset genbank files based on alignments to a FASTA file.
+    gbk2fasta                                               Command to convert genbank files to fasta files.
     blasts                                                  Command to execute automatized blast commands.
     replace_fasta_seq                                       Command to replace strings in a FASTA using defitinitions from a BED file
 
@@ -49,6 +50,7 @@ from docopt import docopt
 from .version import *
 from .tsv2markdown import *
 from .splitgbk import *
+from .gbk2fasta import *
 from .blasts import *
 from .align2subsetgbk import *
 from .replace_fasta_seq import *
@@ -172,6 +174,23 @@ def main():
 
         else:
             print(usage_replace_fasta_seq.strip())
+    
+    ###########################
+    ### Convert gbk 2 fasta ###
+    ###########################
+    elif arguments['<command>'] == 'gbk2fasta':
+        # Parse docopt
+        args = docopt(usage_gbk2fasta, version=__version__, help=False)
+
+        # run script
+        if args['--help']:
+            print(usage_gbk2fasta.strip())
+
+        elif args['--gbk']:
+            convertgbk(genbank=args['--gbk'], genes_list=args['--fofn'])
+
+        else:
+            print(usage_gbk2fasta.strip())
 
     #####################
     ### Check license ###
