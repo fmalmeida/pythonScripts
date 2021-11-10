@@ -77,7 +77,7 @@ def main():
             file2mw(args['--tsv'], '\t', args['--header'])
 
         elif args['--csv']:
-            file2mw(arguments['--csv'], ',', args['--header'])
+            file2mw(args['--csv'], ',', args['--header'])
 
         else:
             print(usage_tsv2markdown.strip())

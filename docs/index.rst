@@ -1,7 +1,7 @@
 .. _index:
 
 falmeida-py (Felipe Almeida python scripts)
-=====================================
+===========================================
 
 This is just a simple repository of python scripts that I use in a daily basis. Some of them are used in my projects, some are just for fun. Thus, in order to provide a better way to use my scripts throughout machines, I decided to create a package with them.
 
@@ -40,13 +40,7 @@ Available features can be visualised with the command line help message:
    self
 
 .. .. toctree::
-..    :hidden:
-..    :caption: Kickoff
+   :hidden:
+   :caption: Reference book
 
-..    quickstart
-
-.. .. toctree::
-..    :hidden:
-..    :caption: Reference book
-
-..    manual
+   tsv2markdown

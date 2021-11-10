@@ -41,7 +41,9 @@ def file2mw(filep, fsep, header):
     with open(filep) as file_in:
         lines = []
         for line in file_in:
-            lines.append(line.split(fsep))
+            words = line.split(fsep)
+            words_striped = [word.strip() for word in words]
+            lines.append(words_striped)
 
     # generate tabulate
     if header:

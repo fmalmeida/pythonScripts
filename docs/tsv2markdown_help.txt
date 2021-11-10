@@ -1,0 +1,15 @@
+A simple script to convert tsv (or csv) files to markdown tables using tabulate!
+Copyright (C) 2020 Felipe Marques de Almeida (almeidafmarques@gmail.com)
+License: Public Domain
+
+usage:
+    falmeida-py tsv2markdown
+    falmeida-py tsv2markdown [ -h|--help ]
+    falmeida-py tsv2markdown [ --tsv <file> --csv <file> --header <list> ]
+
+options:
+    -h --help                               Show this screen.
+    --tsv=<file>                            Input tsv file to print as markdown table
+    --csv=<file>                            Input csv file to print as markdown table
+    --header=<list>                         If file does not have a header, set a
+                                            custom header. E.g. --header "Planet,R (km),mass (x 10^29 kg)".
