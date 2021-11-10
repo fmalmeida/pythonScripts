@@ -24,7 +24,7 @@ The usage is super simple. For example, given the following CSV:
 
 We could rapidply create a markdown table entry with:
 
-.. code-block:: bash
+.. code-block:: none
 
    falmeida-py tsv2markdown --csv sample.csv --header "sample id,country,collection source,year"
 
