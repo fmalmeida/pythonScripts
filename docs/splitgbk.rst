@@ -5,7 +5,7 @@ splitgbk
 
 This is a super simple script that performs only one task:
 
-* Given a genbank file with multiple sequences, it splits the file into multiple files, each with one sequence and its related annotation features features.
+* Given a genbank file with multiple sequences, it splits it into multiple files, each one with one sequence and its related annotation features.
 
 CLI help message
 ----------------
