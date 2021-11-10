@@ -14,6 +14,4 @@ anaconda upload $(find osx-64 -name "falmeida-py*.tar.bz2") --force
 rm -rf build osx-64
 
 # save new help message
-python3 falmeida-py-runner.py -h &> docs/help_message.txt
-python3 falmeida-py-runner.py tsv2markdown -h &> docs/tsv2markdown_help.txt
-python3 falmeida-py-runner.py splitgbk -h &> docs/splitgbk_help.txtpython3 falmeida-py-runner.py align2subsetgbk -h &> docs/align2subsetgbk_help.txt
+bash build_helps.sh
