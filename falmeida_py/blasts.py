@@ -34,10 +34,8 @@ Options:
 ##################################
 ### Loading Necessary Packages ###
 ##################################
-from docopt import docopt
 import pandas as pd
 import os
-import sys
 
 ######################
 ### BLAST FUNCTION ###
@@ -55,7 +53,7 @@ def blast(task, query, subject, culling, minid, mincov, out, threads, twoway):
         db_type = "nucl"
     elif task == "blastx" or task == "blastp":
         db_type = "prot"
-    os.system(f"makeblastdb -in {subject} -parse_seqids -out ./FA-PY-SUBJECT-DB -dbtype {db_type} 1> /dev/null")
+    os.system(f"makeblastdb -in {subject} -out ./FA-PY-SUBJECT-DB -dbtype {db_type} 1> /dev/null")
 
     # run blast
     if twoway:
