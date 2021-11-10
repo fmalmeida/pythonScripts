@@ -1,9 +1,13 @@
 # falmeida-py (Felipe Almeida python scripts)
 
-[![](https://anaconda.org/falmeida/falmeida-py/badges/installer/conda.svg)](https://anaconda.org/falmeida/falmeida-py) [![](https://anaconda.org/falmeida/falmeida-py/badges/version.svg)](https://anaconda.org/falmeida/falmeida-py) [![](https://anaconda.org/falmeida/falmeida-py/badges/platforms.svg
-)](https://anaconda.org/falmeida/falmeida-py)
+[![](https://anaconda.org/falmeida/falmeida-py/badges/installer/conda.svg)](https://anaconda.org/falmeida/falmeida-py)
+[![](https://anaconda.org/falmeida/falmeida-py/badges/version.svg)](https://anaconda.org/falmeida/falmeida-py)
+[![](https://anaconda.org/falmeida/falmeida-py/badges/platforms.svg)](https://anaconda.org/falmeida/falmeida-py)
+[![Documentation Status](https://readthedocs.org/projects/falmeida-py/badge/?version=latest)](https://falmeida-py.readthedocs.io/en/latest/?badge=latest)
 
 This repository has been turned into an installable python package in order to facilitate the distribution of my custom python scripts and, in turn, make them easier to execute.
+
+<a href="https://falmeida-py.readthedocs.io/en/latest/index.html"><strong>Read the complete documentation »</strong></a>
 
 ## Installation
 
