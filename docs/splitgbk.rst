@@ -3,7 +3,7 @@
 splitgbk
 ========
 
-This is a super sample script that performs only one task:
+This is a super simple script that performs only one task:
 
 * Given a genbank file with multiple sequences, it splits the file into multiple files, each with one sequence and its related annotation features features.
 
