@@ -5,9 +5,9 @@ License: Public Domain
 usage:
     falmeida-py splitgbk
     falmeida-py splitgbk [ -h|--help ]
-    falmeida-py splitgbk [ --gbk <file> ] [ -o|--outdir <outdir> ]
+    falmeida-py splitgbk [ --gbk <file> ] [ --outdir <outdir> ]
 
 options:
     -h --help                               Show this screen.
     -g --gbk=<file>                         Input genbank file to split into multiple individual files.
-    -o --outdir=<outdir>                    Directory in which to write the splitted files [Default: ./].
+    -o --outdir=<outdir>                    Directory (must already exist) in which to write the splitted files [Default: ./].

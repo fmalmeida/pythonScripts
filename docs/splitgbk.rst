@@ -21,3 +21,7 @@ The usage is super simple:
 .. code-block:: none
 
    falmeida-py tsv2markdown --gbk multi_contig.gbk --outdir single_contig_gbks
+
+.. note::
+
+   The directory must already exist.

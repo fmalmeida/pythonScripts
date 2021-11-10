@@ -18,7 +18,9 @@ Users are advised to create separate conda environments
    # Get the conda package
    mamba create -n falmeida-py -c anaconda -c conda-forge -c bioconda -c falmeida falmeida-py
 
-.. TIP:: Users are advised to use `mamba <https://github.com/mamba-org/mamba>`_ since it is faster.
+.. tip::
+   
+   Users are advised to use `mamba <https://github.com/mamba-org/mamba>`_ since it is faster.
 
 Available features
 ------------------
