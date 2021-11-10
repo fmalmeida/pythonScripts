@@ -14,15 +14,14 @@ usage:
 
 options:
     -h --help                               Show this screen.
-    --gbk=<file>                            Input genbank file to split into multiple individual files.
-    -o=<outdir>, --outdir=<outdir>          Directory in which to write the splitted files [Default: ./].
+    -g --gbk=<file>                         Input genbank file to split into multiple individual files.
+    -o --outdir=<outdir>                    Directory in which to write the splitted files [Default: ./].
 """
 
 ##################################
 ### Loading Necessary Packages ###
 ##################################
 from Bio import SeqIO
-import sys
 import os
 
 ####################

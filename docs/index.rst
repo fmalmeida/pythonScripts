@@ -44,3 +44,4 @@ Available features can be visualised with the command line help message:
    :caption: Reference book
 
    tsv2markdown
+   splitgbk
