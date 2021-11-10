@@ -5,8 +5,7 @@
 ### Def help message ###
 ########################
 usage_align2subsetgbk = """
-A script meant to subset a genbank annotation file based on alignments
-against a query FASTA file
+A script meant to subset a genbank annotation file based on alignments against a query (Nucleotide) FASTA file
 
 ---
 Copyright (C) 2020 Felipe Marques de Almeida (almeidafmarques@gmail.com)
@@ -19,7 +18,7 @@ Usage:
 Options:
     -h --help                      Show this screen.
     -g --gbk=<in_gbk>              Gbk file for subset
-    -f --fasta=<fasta>             FASTA file for querying the gbk
+    -f --fasta=<fasta>             FASTA (nucl) file for querying the gbk
     -o --out=<out_gbk>             Gbk filtered output file [Default: out.gbk].
     --extension=<int>              Base pair length to extend the flank regions in the alignment [Default: 0].
     --minid=<int>                  Min. Identity percentage for gene annotation [Default: 80].

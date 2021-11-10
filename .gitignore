@@ -2,3 +2,4 @@ falmeida_py.egg-info/
 dist
 falmeida_py/__pycache__
 build/*
+docs/_build

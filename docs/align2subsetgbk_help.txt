@@ -1,0 +1,4 @@
+usage:
+    falmeida-py splitgbk
+    falmeida-py splitgbk [ -h|--help ]
+    falmeida-py splitgbk [ --gbk <file> ] [ --outdir <outdir> ]
