@@ -39,7 +39,7 @@ Available features can be visualised with the command line help message:
 
    self
 
-.. .. toctree::
+.. toctree::
    :hidden:
    :caption: Reference book
 
