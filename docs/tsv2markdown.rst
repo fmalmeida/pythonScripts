@@ -3,7 +3,7 @@
 tsv2markdown
 ============
 
-Often I found myself having to add the contents of TSV (or CSV) files in markdown documents such as jupyter notebooks or rmarkdown documents. The process was very tedious, so I create a super simple script to output the contents so it could just be pasted into these documents.
+Often I've found myself having to add the contents of TSV (or CSV) files in markdown documents such as jupyter notebooks or rmarkdown documents. The process is very tedious, so I created a super simple script to output the contents so it could just be pasted into these documents.
 
 CLI help message
 ----------------
