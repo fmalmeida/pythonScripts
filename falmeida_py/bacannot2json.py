@@ -105,32 +105,53 @@ def virulence_stats(bacannot_summary):
             # init virulence annotation dictionary
             bacannot_summary[sample]['virulence_annotation'] = {}
             
+            # vfdb
             if os.path.exists(f"{results_dir}/virulence/vfdb/{sample}_vfdb_blastn_onGenes.summary.txt"):
 
                 # init VFDB annotation dictionary
                 bacannot_summary[sample]['virulence_annotation']['VFDB'] = {}
 
                 # load vfdb results
-                vfdb_results = pd.read_csv(
+                results = pd.read_csv(
                     f"{results_dir}/virulence/vfdb/{sample}_vfdb_blastn_onGenes.summary.txt",
                     sep='\t'
                 )
 
                 # number of virulence genes
-                total_number_of_genes = len( vfdb_results['SEQUENCE'].unique() )
+                total_number_of_genes = len( results['SEQUENCE'].unique() )
                 bacannot_summary[sample]['virulence_annotation']['VFDB']['total'] = total_number_of_genes
 
                 # identified VFs
-                detected_vf_names = [x.split('_(')[0].replace("[", "") for x in vfdb_results['PRODUCT'].unique() ]
-                detected_vf_ids   = [x.split('_(')[1].split(')')[0].replace(")", "") for x in vfdb_results['PRODUCT'].unique() ]
-                detected_vf_genes = [x.replace(")", "").replace("(", "") for x in vfdb_results['GENE'].unique() ]
+                detected_vf_names = [x.split('_(')[0].replace("[", "") for x in results['PRODUCT'].unique() ]
+                detected_vf_ids   = [x.split('_(')[1].split(')')[0].replace(")", "") for x in results['PRODUCT'].unique() ]
+                detected_vf_genes = [x.replace(")", "").replace("(", "") for x in results['GENE'].unique() ]
 
                 bacannot_summary[sample]['virulence_annotation']['VFDB']['detected_vf_names'] = ';'.join( detected_vf_names )
                 bacannot_summary[sample]['virulence_annotation']['VFDB']['detected_vf_ids'] = ';'.join( detected_vf_ids )
                 bacannot_summary[sample]['virulence_annotation']['VFDB']['detected_vf_genes'] = ';'.join( detected_vf_genes )
+            
+            # victors
+            if os.path.exists(f"{results_dir}/virulence/victors/{sample}_victors_blastp_onGenes.summary.txt"):
 
-                # check
-                print( vfdb_results )
+                # init victors annotation dictionary
+                bacannot_summary[sample]['virulence_annotation']['Victors'] = {}
+
+                # load vfdb results
+                results = pd.read_csv(
+                    f"{results_dir}/virulence/victors/{sample}_victors_blastp_onGenes.summary.txt",
+                    sep='\t'
+                )
+
+                # number of virulence genes
+                total_number_of_genes = len( results['SEQUENCE'].unique() )
+                bacannot_summary[sample]['virulence_annotation']['Victors']['total'] = total_number_of_genes
+
+                # identified VFs
+                detected_vf_ids   = [x.replace("Victors_", "") for x in results['VICTORS_ID'].unique() ]
+                detected_vf_genes = [x for x in results['GENE'].unique() ]
+
+                bacannot_summary[sample]['virulence_annotation']['Victors']['detected_vf_ids'] = ';'.join( detected_vf_ids )
+                bacannot_summary[sample]['virulence_annotation']['Victors']['detected_vf_genes'] = ';'.join( detected_vf_genes )
 
 #######################################
 ### Def main bacannot2json function ###
