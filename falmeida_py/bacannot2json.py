@@ -5,7 +5,7 @@
 ### Def help message ###
 ########################
 usage_bacannot2json = """
-A script meant to subset a genbank annotation file based on alignments against a query (Nucleotide) FASTA file
+A script to summarize the main annotation results of fmalmeida/bacannot pipeline as a structured JSON file.
 
 ---
 Copyright (C) 2022 Felipe Marques de Almeida (almeidafmarques@gmail.com)
