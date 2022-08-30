@@ -167,7 +167,10 @@ def bacannot2json(indir, outfile):
     # check virulence annotation stats
     virulence_stats( bacannot_summary )
 
+    # save results
+    final_results = json.dumps( bacannot_summary, sort_keys=True, indent=4 )
+    with open(outfile, 'w') as file:
+        file.write(final_results)
+
     # keep checking
-    print(
-        json.dumps( bacannot_summary, sort_keys=True, indent=4 )
-    )
+    print( final_results )
