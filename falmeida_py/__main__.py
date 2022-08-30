@@ -29,12 +29,13 @@ options:
     --license                                               Show LEGAL LICENSE information
 
 commands:
-    tsv2markdown                                            Command for rapid convertion of tsv or csv to markdown tables.
-    splitgbk                                                Command to split multisequence genbank files into individual files.
-    align2subsetgbk                                         Command to subset genbank files based on alignments to a FASTA file.
-    gbk2fasta                                               Command to convert genbank files to fasta files.
-    blasts                                                  Command to execute automatized blast commands.
-    replace_fasta_seq                                       Command to replace strings in a FASTA using defitinitions from a BED file
+    tsv2markdown               Command for rapid convertion of tsv or csv to markdown tables.
+    splitgbk                   Command to split multisequence genbank files into individual files.
+    align2subsetgbk            Command to subset genbank files based on alignments to a FASTA file.
+    gbk2fasta                  Command to convert genbank files to fasta files.
+    blasts                     Command to execute automatized blast commands.
+    replace_fasta_seq          Command to replace strings in a FASTA using defitinitions from a BED file
+    bacannot2json              Command to summarize main bacannot annotation results into JSON file
 
 Use: `falmeida-py <commmand> -h` to get more help and see examples.
 """
@@ -43,6 +44,8 @@ Use: `falmeida-py <commmand> -h` to get more help and see examples.
 ### Loading Necessary Packages ###
 ##################################
 from docopt import docopt
+
+from falmeida_py.bacannot2json import bacannot2json
 
 ########################
 ### Import functions ###
@@ -54,6 +57,7 @@ from .gbk2fasta import *
 from .blasts import *
 from .align2subsetgbk import *
 from .replace_fasta_seq import *
+from .bacannot2json import usage_bacannot2json,bacannot2json
 
 ## Defining main
 def main():
@@ -191,6 +195,24 @@ def main():
 
         else:
             print(usage_gbk2fasta.strip())
+    
+    #############################
+    ### bacannot2json command ###
+    #############################
+    if arguments['<command>'] == 'bacannot2json':
+
+        # Parse docopt
+        args = docopt(usage_bacannot2json, version=__version__, help=False)
+
+        # run script
+        if args['--help']:
+            print(usage_bacannot2json.strip())
+        
+        elif args['--input']:
+            bacannot2json(args['--input'], args['--output'])
+
+        else:
+            print(usage_bacannot2json.strip())
 
     #####################
     ### Check license ###
