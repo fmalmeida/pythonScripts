@@ -199,6 +199,36 @@ def plasmids_stats(bacannot_summary):
                     bacannot_summary[sample]['plasmid_annotation']['platon'][seq]['Replication'] = results.loc[results['ID'] == seq, '# Replication'].item()
                     bacannot_summary[sample]['plasmid_annotation']['platon'][seq]['Mobilization'] = results.loc[results['ID'] == seq, '# Mobilization'].item()
                     bacannot_summary[sample]['plasmid_annotation']['platon'][seq]['Conjugation'] = results.loc[results['ID'] == seq, '# Conjugation'].item()
+            
+            # plasmidfinder
+            if os.path.exists(f"{results_dir}/plasmids/plasmidfinder/results_tab.tsv"):
+
+                # init platon annotation dictionary
+                bacannot_summary[sample]['plasmid_annotation']['plasmidfinder'] = {}
+
+                # load platon results
+                results = pd.read_csv(
+                    f"{results_dir}/plasmids/plasmidfinder/results_tab.tsv",
+                    sep='\t'
+                )
+
+                # databases
+                bacannot_summary[sample]['plasmid_annotation']['plasmidfinder']['Database'] = results['Database'].unique().item()
+
+                # number of plasmid annotations
+                total_number = len(results['Contig'].unique())
+                bacannot_summary[sample]['plasmid_annotation']['plasmidfinder']['total'] = total_number
+
+                # identified contigs
+                contigs = results['Contig'].unique()
+                bacannot_summary[sample]['plasmid_annotation']['plasmidfinder']['contigs'] = ';'.join( contigs )
+
+                # important info over contigs
+                for seq in contigs:
+                    bacannot_summary[sample]['plasmid_annotation']['plasmidfinder'][seq] = {}
+                    bacannot_summary[sample]['plasmid_annotation']['plasmidfinder'][seq]['Inc types'] = ';'.join( results.loc[results['Contig'] == seq, 'Plasmid'].unique() )
+                    bacannot_summary[sample]['plasmid_annotation']['plasmidfinder'][seq]['Identity'] = ';'.join( [str(x) for x in results.loc[results['Contig'] == seq, 'Identity'].unique() ] )
+                    bacannot_summary[sample]['plasmid_annotation']['plasmidfinder'][seq]['Accessions'] = ';'.join( results.loc[results['Contig'] == seq, 'Accession number'].unique() )
 
 #######################################
 ### Def main bacannot2json function ###
@@ -218,7 +248,7 @@ def bacannot2json(indir, outfile):
     plasmids_stats( bacannot_summary )
 
     # save results
-    final_results = json.dumps( bacannot_summary, sort_keys=True, indent=4 )
+    final_results = json.dumps( bacannot_summary, sort_keys=False, indent=4 )
     with open(outfile, 'w') as file:
         file.write(final_results)
 
