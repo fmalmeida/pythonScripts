@@ -136,7 +136,7 @@ def virulence_stats(bacannot_summary):
                 # init victors annotation dictionary
                 bacannot_summary[sample]['virulence_annotation']['Victors'] = {}
 
-                # load vfdb results
+                # load victors results
                 results = pd.read_csv(
                     f"{results_dir}/virulence/victors/{sample}_victors_blastp_onGenes.summary.txt",
                     sep='\t'
@@ -153,6 +153,53 @@ def virulence_stats(bacannot_summary):
                 bacannot_summary[sample]['virulence_annotation']['Victors']['detected_vf_ids'] = ';'.join( detected_vf_ids )
                 bacannot_summary[sample]['virulence_annotation']['Victors']['detected_vf_genes'] = ';'.join( detected_vf_genes )
 
+########################################
+### check plasmids annotations stats ###
+########################################
+def plasmids_stats(bacannot_summary):
+    
+    # iterate over available samples
+    for sample in bacannot_summary:
+
+        # load dir of samples' results
+        results_dir = bacannot_summary[sample]['results_dir']
+
+        # load annotation stats
+        if os.path.exists(f"{results_dir}/plasmids"):
+
+            # init plasmids annotation dictionary
+            bacannot_summary[sample]['plasmid_annotation'] = {}
+            
+            # platon
+            if os.path.exists(f"{results_dir}/plasmids/platon/{sample}.tsv"):
+
+                # init platon annotation dictionary
+                bacannot_summary[sample]['plasmid_annotation']['platon'] = {}
+
+                # load platon results
+                results = pd.read_csv(
+                    f"{results_dir}/plasmids/platon/{sample}.tsv",
+                    sep='\t'
+                )
+
+                # number of plasmid annotations
+                total_number = len(results.index)
+                bacannot_summary[sample]['plasmid_annotation']['platon']['total'] = total_number
+
+                # contigs that are plasmids
+                contigs = [x for x in results['ID'].unique()]
+                bacannot_summary[sample]['plasmid_annotation']['platon']['contigs'] = ';'.join( contigs )
+
+                # per plasmid info
+                for seq in contigs:
+                    bacannot_summary[sample]['plasmid_annotation']['platon'][seq] = {}
+                    bacannot_summary[sample]['plasmid_annotation']['platon'][seq]['ORFs'] = results.loc[results['ID'] == seq, '# ORFs'].item()
+                    bacannot_summary[sample]['plasmid_annotation']['platon'][seq]['Circular'] = results.loc[results['ID'] == seq, 'Circular'].item()
+                    bacannot_summary[sample]['plasmid_annotation']['platon'][seq]['AMRs'] = results.loc[results['ID'] == seq, '# AMRs'].item()
+                    bacannot_summary[sample]['plasmid_annotation']['platon'][seq]['Replication'] = results.loc[results['ID'] == seq, '# Replication'].item()
+                    bacannot_summary[sample]['plasmid_annotation']['platon'][seq]['Mobilization'] = results.loc[results['ID'] == seq, '# Mobilization'].item()
+                    bacannot_summary[sample]['plasmid_annotation']['platon'][seq]['Conjugation'] = results.loc[results['ID'] == seq, '# Conjugation'].item()
+
 #######################################
 ### Def main bacannot2json function ###
 #######################################
@@ -166,6 +213,9 @@ def bacannot2json(indir, outfile):
 
     # check virulence annotation stats
     virulence_stats( bacannot_summary )
+
+    # check plasmids annotation stats
+    plasmids_stats( bacannot_summary )
 
     # save results
     final_results = json.dumps( bacannot_summary, sort_keys=True, indent=4 )
