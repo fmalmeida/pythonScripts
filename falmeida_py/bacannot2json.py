@@ -230,6 +230,52 @@ def plasmids_stats(bacannot_summary):
                     bacannot_summary[sample]['plasmid_annotation']['plasmidfinder'][seq]['Identity'] = ';'.join( [str(x) for x in results.loc[results['Contig'] == seq, 'Identity'].unique() ] )
                     bacannot_summary[sample]['plasmid_annotation']['plasmidfinder'][seq]['Accessions'] = ';'.join( results.loc[results['Contig'] == seq, 'Accession number'].unique() )
 
+##########################################
+### check resistance annotations stats ###
+##########################################
+def resistance_stats(bacannot_summary):
+    
+    # iterate over available samples
+    for sample in bacannot_summary:
+
+        # load dir of samples' results
+        results_dir = bacannot_summary[sample]['results_dir']
+
+        # load annotation stats
+        if os.path.exists(f"{results_dir}/resistance"):
+
+            # init plasmids annotation dictionary
+            bacannot_summary[sample]['resistance'] = {}
+            
+            # amrfinderplus
+            if os.path.exists(f"{results_dir}/resistance/AMRFinderPlus/AMRFinder_resistance-only.tsv"):
+
+                # init amrfinderplus annotation dictionary
+                bacannot_summary[sample]['resistance']['amrfinderplus'] = {}
+
+                # load platon results
+                results = pd.read_csv(
+                    f"{results_dir}/resistance/AMRFinderPlus/AMRFinder_resistance-only.tsv",
+                    sep='\t'
+                )
+                results.sort_values('Gene symbol', inplace=True)
+
+                # number of annotations
+                total_number = len(results['Protein identifier'].unique())
+                bacannot_summary[sample]['resistance']['amrfinderplus']['total'] = total_number
+
+                # gene annotations
+                gene_names = [ x for x in results['Gene symbol'].unique() ]
+                bacannot_summary[sample]['resistance']['amrfinderplus']['genes'] = ';'.join( gene_names )
+
+                # annotation subclass
+                annotation_subclasses = [ str(x) for x in results['Subclass'] ]
+                bacannot_summary[sample]['resistance']['amrfinderplus']['subclasses'] = ';'.join( annotation_subclasses )
+
+                # annotation identity
+                annotation_identity = [ str(x) for x in results['% Identity to reference sequence'] ]
+                bacannot_summary[sample]['resistance']['amrfinderplus']['identity'] = ';'.join( annotation_identity )
+
 #######################################
 ### Def main bacannot2json function ###
 #######################################
@@ -247,8 +293,11 @@ def bacannot2json(indir, outfile):
     # check plasmids annotation stats
     plasmids_stats( bacannot_summary )
 
+    # check resistance annotation stats
+    resistance_stats( bacannot_summary )
+
     # save results
-    final_results = json.dumps( bacannot_summary, sort_keys=False, indent=4 )
+    final_results = json.dumps( bacannot_summary, sort_keys=True, indent=4 )
     with open(outfile, 'w') as file:
         file.write(final_results)
 
