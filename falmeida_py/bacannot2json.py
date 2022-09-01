@@ -148,9 +148,9 @@ def virulence_stats(bacannot_summary):
                 # gene annotations
                 for gene in [ str(x) for x in results['SEQUENCE'].unique() ]:
                     row = results.loc[results['SEQUENCE'] == gene]
-                    bacannot_summary[sample]['virulence']['VFDB'][gene] = {}
-                    bacannot_summary[sample]['virulence']['VFDB'][gene]['id'] = row['VICTORS_ID'].item().replace("Victors_", "")
-                    bacannot_summary[sample]['virulence']['VFDB'][gene]['name'] = row['GENE'].item()
+                    bacannot_summary[sample]['virulence']['Victors'][gene] = {}
+                    bacannot_summary[sample]['virulence']['Victors'][gene]['id'] = row['VICTORS_ID'].item().replace("Victors_", "")
+                    bacannot_summary[sample]['virulence']['Victors'][gene]['name'] = row['GENE'].item()
 
 
 ########################################
