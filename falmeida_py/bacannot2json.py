@@ -323,6 +323,39 @@ def resistance_stats(bacannot_summary):
                     bacannot_summary[sample]['resistance']['resfinder'][gene]['accession'].append(
                         row['Accession no.']
                     )
+            
+            # rgi
+            if os.path.exists(f"{results_dir}/resistance/RGI/RGI_{sample}.txt"):
+
+                # init amrfinderplus annotation dictionary
+                bacannot_summary[sample]['resistance']['rgi'] = {}
+
+                # load amrfinderplus results
+                results = pd.read_csv(
+                    f"{results_dir}/resistance/RGI/RGI_{sample}.txt",
+                    sep='\t'
+                )
+                results.drop_duplicates(inplace=True)
+
+                # number of annotations
+                total_number = len(results['ORF_ID'].unique())
+                bacannot_summary[sample]['resistance']['rgi']['total'] = total_number
+
+                # gene annotations
+                for gene in [ str(x) for x in results['ORF_ID'].unique() ]:
+                    row = results.loc[results['ORF_ID'] == gene]
+                    name_split_list = gene.split(' ')
+                    gene = name_split_list[0]
+                    name = ' '.join(name_split_list[1:])
+                    bacannot_summary[sample]['resistance']['rgi'][gene] = {}
+                    bacannot_summary[sample]['resistance']['rgi'][gene]['name'] = name
+                    bacannot_summary[sample]['resistance']['rgi'][gene]['gene'] = row['Best_Hit_ARO'].item()
+                    bacannot_summary[sample]['resistance']['rgi'][gene]['cut_off'] = row['Cut_Off'].item()
+                    bacannot_summary[sample]['resistance']['rgi'][gene]['resistance_mechanism'] = row['Resistance Mechanism'].item()
+                    bacannot_summary[sample]['resistance']['rgi'][gene]['gene_family'] = row['AMR Gene Family'].item()
+                    bacannot_summary[sample]['resistance']['rgi'][gene]['subclass'] = row['Drug Class'].item()
+                    bacannot_summary[sample]['resistance']['rgi'][gene]['identity'] = row['Best_Identities'].item()
+                    bacannot_summary[sample]['resistance']['rgi'][gene]['accession'] = row['Model_ID'].item()
 
 #######################################
 ### Def main bacannot2json function ###
