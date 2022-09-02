@@ -83,9 +83,9 @@ def general_stats(bacannot_summary):
 
         # save annotation stats
         bacannot_summary[sample]['general_annotation'] = {}
-        bacannot_summary[sample]['general_annotation']['CDS'] = general_results['CDS']
-        bacannot_summary[sample]['general_annotation']['rRNA'] = general_results['rRNA']
-        bacannot_summary[sample]['general_annotation']['tRNA'] = general_results['tRNA']
+        bacannot_summary[sample]['general_annotation']['CDS']   = general_results['CDS']
+        bacannot_summary[sample]['general_annotation']['rRNA']  = general_results['rRNA']
+        bacannot_summary[sample]['general_annotation']['tRNA']  = general_results['tRNA']
         bacannot_summary[sample]['general_annotation']['tmRNA'] = general_results['tmRNA']
 
 ##################################
