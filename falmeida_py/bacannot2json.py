@@ -252,7 +252,7 @@ def resistance_stats(bacannot_summary):
                 # init amrfinderplus annotation dictionary
                 bacannot_summary[sample]['resistance']['amrfinderplus'] = {}
 
-                # load platon results
+                # load amrfinderplus results
                 results = pd.read_csv(
                     f"{results_dir}/resistance/AMRFinderPlus/AMRFinder_resistance-only.tsv",
                     sep='\t'
@@ -270,6 +270,59 @@ def resistance_stats(bacannot_summary):
                     bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['gene'] = row['Gene symbol'].item()
                     bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['subclass'] = row['Subclass'].item()
                     bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['identity'] = row['% Identity to reference sequence'].item()
+            
+
+            # resfinder
+            if os.path.exists(f"{results_dir}/resistance/resfinder/ResFinder_results_tab.txt"):
+
+                # init resfinder annotation dictionary
+                bacannot_summary[sample]['resistance']['resfinder'] = {}
+
+                # load resfinder results
+                results = pd.read_csv(
+                    f"{results_dir}/resistance/resfinder/ResFinder_results_tab.txt",
+                    sep='\t'
+                )
+                results.drop_duplicates(inplace=True)
+
+                # number of annotations
+                bacannot_summary[sample]['resistance']['amrfinderplus']['total'] = len(results.index)
+
+                # gene annotations
+                for gene in [ str(x) for x in results['Resistance gene'].unique() ]:
+
+                    # init
+                    bacannot_summary[sample]['resistance']['resfinder'][gene] = {}
+                    bacannot_summary[sample]['resistance']['resfinder'][gene]['chr']   = list()
+                    bacannot_summary[sample]['resistance']['resfinder'][gene]['start'] = list()
+                    bacannot_summary[sample]['resistance']['resfinder'][gene]['end']   = list()
+                    bacannot_summary[sample]['resistance']['resfinder'][gene]['Identity']    = list()
+                    bacannot_summary[sample]['resistance']['resfinder'][gene]['phenotype']   = list()
+                    bacannot_summary[sample]['resistance']['resfinder'][gene]['accession']   = list()
+
+                # parse
+                for index, row in results.iterrows():
+
+                    gene = row['Resistance gene']
+
+                    bacannot_summary[sample]['resistance']['resfinder'][gene]['chr'].append(
+                        row['Contig']
+                    )
+                    bacannot_summary[sample]['resistance']['resfinder'][gene]['start'].append(
+                        row['Position in contig'].split('..')[0]
+                    )
+                    bacannot_summary[sample]['resistance']['resfinder'][gene]['end'].append(
+                        row['Position in contig'].split('..')[1]
+                    )
+                    bacannot_summary[sample]['resistance']['resfinder'][gene]['Identity'].append(
+                        row['Identity']
+                    )
+                    bacannot_summary[sample]['resistance']['resfinder'][gene]['phenotype'].append(
+                        row['Phenotype']
+                    )
+                    bacannot_summary[sample]['resistance']['resfinder'][gene]['accession'].append(
+                        row['Accession no.']
+                    )
 
 #######################################
 ### Def main bacannot2json function ###
