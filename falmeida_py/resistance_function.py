@@ -67,41 +67,26 @@ def resistance_stats(bacannot_summary):
                 # number of annotations
                 bacannot_summary[sample]['resistance']['amrfinderplus']['total'] = len(results.index)
 
-                # gene annotations
-                for gene in [ str(x) for x in results['Resistance gene'].unique() ]:
+                # contigs with annotations
+                for seq in [ str(x) for x in results['Contig'].unique() ]:
 
                     # init
-                    bacannot_summary[sample]['resistance']['resfinder'][gene] = {}
-                    bacannot_summary[sample]['resistance']['resfinder'][gene]['chr']   = list()
-                    bacannot_summary[sample]['resistance']['resfinder'][gene]['start'] = list()
-                    bacannot_summary[sample]['resistance']['resfinder'][gene]['end']   = list()
-                    bacannot_summary[sample]['resistance']['resfinder'][gene]['Identity']    = list()
-                    bacannot_summary[sample]['resistance']['resfinder'][gene]['phenotype']   = list()
-                    bacannot_summary[sample]['resistance']['resfinder'][gene]['accession']   = list()
+                    bacannot_summary[sample]['resistance']['resfinder'][seq] = {}
 
                 # parse
                 for index, row in results.iterrows():
+                    
+                    # init
+                    seq    = row['Contig']
+                    gene   = row['Resistance gene']
 
-                    gene = row['Resistance gene']
-
-                    bacannot_summary[sample]['resistance']['resfinder'][gene]['chr'].append(
-                        row['Contig']
-                    )
-                    bacannot_summary[sample]['resistance']['resfinder'][gene]['start'].append(
-                        row['Position in contig'].split('..')[0]
-                    )
-                    bacannot_summary[sample]['resistance']['resfinder'][gene]['end'].append(
-                        row['Position in contig'].split('..')[1]
-                    )
-                    bacannot_summary[sample]['resistance']['resfinder'][gene]['Identity'].append(
-                        row['Identity']
-                    )
-                    bacannot_summary[sample]['resistance']['resfinder'][gene]['phenotype'].append(
-                        row['Phenotype']
-                    )
-                    bacannot_summary[sample]['resistance']['resfinder'][gene]['accession'].append(
-                        row['Accession no.']
-                    )
+                    # parse
+                    bacannot_summary[sample]['resistance']['resfinder'][seq][gene] = {}
+                    bacannot_summary[sample]['resistance']['resfinder'][seq][gene]['start'] = row['Position in contig'].split('..')[0]
+                    bacannot_summary[sample]['resistance']['resfinder'][seq][gene]['end']   = row['Position in contig'].split('..')[1]
+                    bacannot_summary[sample]['resistance']['resfinder'][seq][gene]['Identity'] = row['Identity']
+                    bacannot_summary[sample]['resistance']['resfinder'][seq][gene]['phenotype'] = row['Phenotype']
+                    bacannot_summary[sample]['resistance']['resfinder'][seq][gene]['accession'] = row['Accession no.']
             
             # rgi
             if os.path.exists(f"{results_dir}/resistance/RGI/RGI_{sample}.txt"):

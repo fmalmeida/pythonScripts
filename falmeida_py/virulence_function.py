@@ -7,6 +7,7 @@ import json
 import os
 import yaml
 from pathlib import Path
+from .utils import load_and_subset_gff
 
 ##################################
 ### check virulence annotation ###
@@ -18,6 +19,9 @@ def virulence_stats(bacannot_summary):
 
         # load dir of samples' results
         results_dir = bacannot_summary[sample]['results_dir']
+
+        # load gff_file
+        gff_file = f"{results_dir}/gffs/{sample}.gff"
 
         # load annotation stats
         if os.path.exists(f"{results_dir}/virulence"):
@@ -31,6 +35,9 @@ def virulence_stats(bacannot_summary):
                 # init VFDB annotation dictionary
                 bacannot_summary[sample]['virulence']['VFDB'] = {}
 
+                # load gff
+                gff = load_and_subset_gff(gff_file, 'source', 'VFDB')
+
                 # load vfdb results
                 results = pd.read_csv(
                     f"{results_dir}/virulence/vfdb/{sample}_vfdb_blastn_onGenes.summary.txt",
@@ -43,11 +50,27 @@ def virulence_stats(bacannot_summary):
 
                 # gene annotations
                 for gene in [ str(x) for x in results['SEQUENCE'].unique() ]:
-                    row = results.loc[results['SEQUENCE'] == gene]
+                    
+                    # init values
                     bacannot_summary[sample]['virulence']['VFDB'][gene] = {}
-                    bacannot_summary[sample]['virulence']['VFDB'][gene]['virulence_factor'] = row['PRODUCT'].item().split('_(')[0].replace("[", "")
-                    bacannot_summary[sample]['virulence']['VFDB'][gene]['id'] = row['PRODUCT'].item().split('_(')[1].split(')')[0].replace(")", "")
-                    bacannot_summary[sample]['virulence']['VFDB'][gene]['name'] = row['GENE'].item().replace(")", "").replace("(", "")
+                    row = results.loc[results['SEQUENCE'] == gene]
+                    gff_row = gff[gff['attributes'].str.contains(gene)]
+                    vf_name = row['PRODUCT'].item().split('_(')[0].replace("[", "")
+                    vf_id = row['PRODUCT'].item().split('_(')[1].split(')')[0].replace(")", "")
+                    vf_fullname = row['PRODUCT'].item().replace("[", "").replace("]", "")
+                    gene_name = row['GENE'].item().replace(")", "").replace("(", "")
+                    contig = gff_row['seq'].item()
+                    start  = gff_row['start'].item()
+                    end    = gff_row['end'].item()
+
+                    # add to dict
+                    bacannot_summary[sample]['virulence']['VFDB'][gene]['virulence_factor'] = vf_name
+                    bacannot_summary[sample]['virulence']['VFDB'][gene]['product'] = vf_fullname
+                    bacannot_summary[sample]['virulence']['VFDB'][gene]['id'] = vf_id
+                    bacannot_summary[sample]['virulence']['VFDB'][gene]['gene'] = gene_name
+                    bacannot_summary[sample]['virulence']['VFDB'][gene]['chr'] = contig
+                    bacannot_summary[sample]['virulence']['VFDB'][gene]['start'] = start
+                    bacannot_summary[sample]['virulence']['VFDB'][gene]['end'] = end
             
             # victors
             if os.path.exists(f"{results_dir}/virulence/victors/{sample}_victors_blastp_onGenes.summary.txt"):

@@ -97,7 +97,7 @@ def general_stats(bacannot_summary):
 def bacannot2json(indir, outfile):
 
     # initialize
-    bacannot_dir,bacannot_summary = dict_init( indir )
+    bacannot_dir, bacannot_summary = dict_init( indir )
 
     # check general annotation stats
     general_stats( bacannot_summary )
