@@ -84,8 +84,15 @@ def general_stats(bacannot_summary):
             Path(f"{results_dir}/annotation/{sample}.txt").read_text()
         )
 
+        # load MLST
+        mlst_results = pd.read_csv(
+            f"{results_dir}/MLST/{sample}_mlst_analysis.txt",
+            sep='\t', header=None
+        )
+
         # save annotation stats
         bacannot_summary[sample]['general_annotation'] = {}
+        bacannot_summary[sample]['general_annotation']['MLST']  = mlst_results[2].item().replace('-', 'NaN')
         bacannot_summary[sample]['general_annotation']['CDS']   = general_results['CDS']
         bacannot_summary[sample]['general_annotation']['rRNA']  = general_results['rRNA']
         bacannot_summary[sample]['general_annotation']['tRNA']  = general_results['tRNA']
