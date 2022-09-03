@@ -7,6 +7,7 @@ import json
 import os
 import yaml
 from pathlib import Path
+from .utils import load_and_subset_gff
 
 ##########################################
 ### check resistance annotations stats ###
@@ -18,6 +19,9 @@ def resistance_stats(bacannot_summary):
 
         # load dir of samples' results
         results_dir = bacannot_summary[sample]['results_dir']
+
+        # load gff_file
+        gff_file = f"{results_dir}/gffs/{sample}.gff"
 
         # load annotation stats
         if os.path.exists(f"{results_dir}/resistance"):
@@ -36,7 +40,10 @@ def resistance_stats(bacannot_summary):
                     f"{results_dir}/resistance/AMRFinderPlus/AMRFinder_resistance-only.tsv",
                     sep='\t'
                 )
-                results.sort_values('Gene symbol', inplace=True)
+
+                # load gff
+                gff = load_and_subset_gff(gff_file, 'source', 'AMRFinderPlus')
+                gff.drop_duplicates(inplace=True)
 
                 # number of annotations
                 total_number = len(results['Protein identifier'].unique())
@@ -44,11 +51,26 @@ def resistance_stats(bacannot_summary):
 
                 # gene annotations
                 for gene in [ str(x) for x in results['Protein identifier'].unique() ]:
+
+                    # init values
                     row = results.loc[results['Protein identifier'] == gene]
                     bacannot_summary[sample]['resistance']['amrfinderplus'][gene] = {}
-                    bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['gene'] = row['Gene symbol'].item()
-                    bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['subclass'] = row['Subclass'].item()
-                    bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['identity'] = row['% Identity to reference sequence'].item()
+                    gene_name = row['Gene symbol'].item()
+                    drug_class = row['Subclass'].item()
+                    identity = row['% Identity to reference sequence'].item()
+
+                    gff_row = gff[gff['attributes'].str.contains(f"ID={gene}")]
+                    contig = gff_row['seq'].item()
+                    start  = gff_row['start'].item()
+                    end    = gff_row['end'].item()
+
+                    # add values to dict
+                    bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['gene'] = gene_name
+                    bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['subclass'] = drug_class
+                    bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['identity'] = identity
+                    bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['contig'] = contig
+                    bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['start'] = start
+                    bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['end'] = end
             
 
             # resfinder
