@@ -54,11 +54,11 @@ def virulence_stats(bacannot_summary):
                     # init values
                     bacannot_summary[sample]['virulence']['VFDB'][gene] = {}
                     row = results.loc[results['SEQUENCE'] == gene]
-                    gff_row = gff[gff['attributes'].str.contains(gene)]
                     vf_name = row['PRODUCT'].item().split('_(')[0].replace("[", "")
                     vf_id = row['PRODUCT'].item().split('_(')[1].split(')')[0].replace(")", "")
                     vf_fullname = row['PRODUCT'].item().replace("[", "").replace("]", "")
                     gene_name = row['GENE'].item().replace(")", "").replace("(", "")
+                    gff_row = gff[gff['attributes'].str.contains(gene)]
                     contig = gff_row['seq'].item()
                     start  = gff_row['start'].item()
                     end    = gff_row['end'].item()
@@ -76,7 +76,7 @@ def virulence_stats(bacannot_summary):
             if os.path.exists(f"{results_dir}/virulence/victors/{sample}_victors_blastp_onGenes.summary.txt"):
 
                 # init victors annotation dictionary
-                bacannot_summary[sample]['virulence']['Victors'] = {}
+                gff = bacannot_summary[sample]['virulence']['Victors'] = {}
 
                 # load victors results
                 results = pd.read_csv(
@@ -84,13 +84,31 @@ def virulence_stats(bacannot_summary):
                     sep='\t'
                 )
 
+                # load gff
+                gff = load_and_subset_gff(gff_file, 'source', 'Victors')
+
                 # number of virulence genes
                 total_number_of_genes = len( results['SEQUENCE'].unique() )
                 bacannot_summary[sample]['virulence']['Victors']['total'] = total_number_of_genes
 
                 # gene annotations
                 for gene in [ str(x) for x in results['SEQUENCE'].unique() ]:
+
+                    # init values
                     row = results.loc[results['SEQUENCE'] == gene]
                     bacannot_summary[sample]['virulence']['Victors'][gene] = {}
-                    bacannot_summary[sample]['virulence']['Victors'][gene]['id'] = row['VICTORS_ID'].item().replace("Victors_", "")
-                    bacannot_summary[sample]['virulence']['Victors'][gene]['name'] = row['GENE'].item()
+                    vf_id = row['VICTORS_ID'].item().replace("Victors_", "")
+                    gene_name = row['GENE'].item()
+                    product = row['DESCRIPTION'].item()
+                    gff_row = gff[gff['attributes'].str.contains(gene)]
+                    contig = gff_row['seq'].item()
+                    start  = gff_row['start'].item()
+                    end    = gff_row['end'].item()
+
+                    # add values to dict
+                    bacannot_summary[sample]['virulence']['Victors'][gene]['id'] = vf_id
+                    bacannot_summary[sample]['virulence']['Victors'][gene]['name'] = gene_name
+                    bacannot_summary[sample]['virulence']['Victors'][gene]['product'] = product
+                    bacannot_summary[sample]['virulence']['Victors'][gene]['contig'] = contig
+                    bacannot_summary[sample]['virulence']['Victors'][gene]['start'] = start
+                    bacannot_summary[sample]['virulence']['Victors'][gene]['end'] = end
