@@ -90,13 +90,25 @@ def general_stats(bacannot_summary):
             sep='\t', header=None
         )
 
+        # load refseq_masher
+        refseq_masher_results = pd.read_csv(
+            f"{results_dir}/refseq_masher/refseq_masher_results.txt",
+            sep='\t'
+        )
+        refseq_masher_results.sort_values(by='distance', ascending=True, inplace=True)
+
         # save annotation stats
         bacannot_summary[sample]['general_annotation'] = {}
-        bacannot_summary[sample]['general_annotation']['MLST']  = mlst_results[2].item().replace('-', 'NaN')
-        bacannot_summary[sample]['general_annotation']['CDS']   = general_results['CDS']
-        bacannot_summary[sample]['general_annotation']['rRNA']  = general_results['rRNA']
-        bacannot_summary[sample]['general_annotation']['tRNA']  = general_results['tRNA']
-        bacannot_summary[sample]['general_annotation']['tmRNA'] = general_results['tmRNA']
+        bacannot_summary[sample]['general_annotation']['mlst']  = mlst_results[2].item().replace('-', 'NaN')
+        bacannot_summary[sample]['general_annotation']['cds']   = general_results['CDS']
+        bacannot_summary[sample]['general_annotation']['rrna']  = general_results['rRNA']
+        bacannot_summary[sample]['general_annotation']['trna']  = general_results['tRNA']
+        bacannot_summary[sample]['general_annotation']['tmrna'] = general_results['tmRNA']
+
+        bacannot_summary[sample]['general_annotation']['closest_reference'] = {}
+        bacannot_summary[sample]['general_annotation']['closest_reference']['strain'] = refseq_masher_results.head(1)['top_taxonomy_name'].item()
+        bacannot_summary[sample]['general_annotation']['closest_reference']['distance'] = refseq_masher_results.head(1)['distance'].item()
+        bacannot_summary[sample]['general_annotation']['closest_reference']['accession'] = refseq_masher_results.head(1)['assembly_accession'].item()
 
 #######################################
 ### Def main bacannot2json function ###
