@@ -35,6 +35,7 @@ commands:
     gbk2fasta                  Command to convert genbank files to fasta files.
     blasts                     Command to execute automatized blast commands.
     replace_fasta_seq          Command to replace strings in a FASTA using defitinitions from a BED file
+    mpgap2csv                  Command to summarize main mpgap multiqc assembly statistics into a CSV file
     bacannot2json              Command to summarize main bacannot annotation results into JSON file
 
 Use: `falmeida-py <commmand> -h` to get more help and see examples.
@@ -58,6 +59,7 @@ from .blasts import *
 from .align2subsetgbk import *
 from .replace_fasta_seq import *
 from .bacannot2json import usage_bacannot2json,bacannot2json
+from .mpgap2csv import usage_mpgap2csv,mpgap2csv
 
 ## Defining main
 def main():
@@ -213,6 +215,24 @@ def main():
 
         else:
             print(usage_bacannot2json.strip())
+
+    #########################
+    ### mpgap2csv command ###
+    #########################
+    if arguments['<command>'] == 'mpgap2csv':
+
+        # Parse docopt
+        args = docopt(usage_mpgap2csv, version=__version__, help=False)
+
+        # run script
+        if args['--help']:
+            print(usage_mpgap2csv.strip())
+        
+        elif args['--input']:
+            mpgap2csv(args['--input'], args['--output'])
+
+        else:
+            print(usage_mpgap2csv.strip())
 
     #####################
     ### Check license ###
