@@ -24,9 +24,9 @@ usage:
     falmeida-py <command> [ -h|--help ] [ <args>... ]
 
 options:
-    -h --help                                               Show this screen
-    -v --version                                            Show version information
-    --license                                               Show LEGAL LICENSE information
+    -h --help                  Show this screen
+    -v --version               Show version information
+    --license                  Show LEGAL LICENSE information
 
 commands:
     tsv2markdown               Command for rapid convertion of tsv or csv to markdown tables.
