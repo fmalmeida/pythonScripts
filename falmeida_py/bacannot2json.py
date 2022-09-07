@@ -42,8 +42,9 @@ from .resistance_function import *
 def get_samples(filepaths):
     samples = []
     for annotation in filepaths:
-        sample = annotation.split('/')[-2]
-        samples.append(sample)
+        if not 'jbrowse' in str(annotation):
+            sample = annotation.split('/')[-2]
+            samples.append(sample)
     return samples
 
 #############################

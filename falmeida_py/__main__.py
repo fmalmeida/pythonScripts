@@ -46,8 +46,6 @@ Use: `falmeida-py <commmand> -h` to get more help and see examples.
 ##################################
 from docopt import docopt
 
-from falmeida_py.bacannot2json import bacannot2json
-
 ########################
 ### Import functions ###
 ########################
@@ -219,7 +217,7 @@ def main():
     #########################
     ### mpgap2csv command ###
     #########################
-    if arguments['<command>'] == 'mpgap2csv':
+    elif arguments['<command>'] == 'mpgap2csv':
 
         # Parse docopt
         args = docopt(usage_mpgap2csv, version=__version__, help=False)

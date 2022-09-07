@@ -29,7 +29,9 @@ def resistance_stats(bacannot_summary):
             # init plasmids annotation dictionary
             bacannot_summary[sample]['resistance'] = {}
             
-            # amrfinderplus
+            #####################
+            ### amrfinderplus ###
+            #####################
             if os.path.exists(f"{results_dir}/resistance/AMRFinderPlus/AMRFinder_resistance-only.tsv"):
 
                 # init amrfinderplus annotation dictionary
@@ -72,8 +74,12 @@ def resistance_stats(bacannot_summary):
                     bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['start'] = start
                     bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['end'] = end
             
-
-            # resfinder
+            #################
+            ### resfinder ###
+            #################
+            #
+            # TODO: Include genomic coordinates info
+            #
             if os.path.exists(f"{results_dir}/resistance/resfinder/ResFinder_results_tab.txt"):
 
                 # init resfinder annotation dictionary
@@ -110,7 +116,9 @@ def resistance_stats(bacannot_summary):
                     bacannot_summary[sample]['resistance']['resfinder'][seq][gene]['phenotype'] = row['Phenotype']
                     bacannot_summary[sample]['resistance']['resfinder'][seq][gene]['accession'] = row['Accession no.']
             
-            # rgi
+            ###########
+            ### rgi ###
+            ###########
             if os.path.exists(f"{results_dir}/resistance/RGI/RGI_{sample}.txt"):
 
                 # init amrfinderplus annotation dictionary
@@ -123,17 +131,32 @@ def resistance_stats(bacannot_summary):
                 )
                 results.drop_duplicates(inplace=True)
 
+                # load gff
+                gff = load_and_subset_gff(gff_file, 'source', 'CARD')
+                gff.drop_duplicates(inplace=True)
+
                 # number of annotations
                 total_number = len(results['ORF_ID'].unique())
                 bacannot_summary[sample]['resistance']['rgi']['total'] = total_number
 
                 # gene annotations
                 for gene in [ str(x) for x in results['ORF_ID'].unique() ]:
+
+                    # init values
                     row = results.loc[results['ORF_ID'] == gene]
                     name_split_list = gene.split(' ')
                     gene = name_split_list[0]
                     name = ' '.join(name_split_list[1:])
                     bacannot_summary[sample]['resistance']['rgi'][gene] = {}
+                    gff_row = gff[gff['attributes'].str.contains(f"ID={gene}")]
+                    contig = gff_row['seq'].item()
+                    start  = gff_row['start'].item()
+                    end    = gff_row['end'].item()
+
+                    # add values to dict
+                    
+                    
+                    
                     bacannot_summary[sample]['resistance']['rgi'][gene]['name'] = name
                     bacannot_summary[sample]['resistance']['rgi'][gene]['gene'] = row['Best_Hit_ARO'].item()
                     bacannot_summary[sample]['resistance']['rgi'][gene]['cut_off'] = row['Cut_Off'].item()
@@ -142,3 +165,6 @@ def resistance_stats(bacannot_summary):
                     bacannot_summary[sample]['resistance']['rgi'][gene]['subclass'] = row['Drug Class'].item()
                     bacannot_summary[sample]['resistance']['rgi'][gene]['identity'] = row['Best_Identities'].item()
                     bacannot_summary[sample]['resistance']['rgi'][gene]['accession'] = row['Model_ID'].item()
+                    bacannot_summary[sample]['resistance']['rgi'][gene]['contig'] = contig
+                    bacannot_summary[sample]['resistance']['rgi'][gene]['start'] = start
+                    bacannot_summary[sample]['resistance']['rgi'][gene]['end'] = end
