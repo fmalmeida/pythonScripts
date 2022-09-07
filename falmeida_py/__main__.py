@@ -209,7 +209,7 @@ def main():
             print(usage_bacannot2json.strip())
         
         elif args['--input']:
-            bacannot2json(args['--input'], args['--output'])
+            bacannot2json(args['--input'], args['--output'], args['--print'])
 
         else:
             print(usage_bacannot2json.strip())

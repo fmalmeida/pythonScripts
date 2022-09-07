@@ -13,12 +13,13 @@ License: Public Domain
 
 Usage:
     falmeida-py bacannot2json [ -h|--help ]
-    falmeida-py bacannot2json [ --input <bacannot_results> --output <outfile> ]
+    falmeida-py bacannot2json [ --input <bacannot_results> --output <outfile> --print ]
 
 Options:
     -h --help                         Show this screen.
     -i --input=<bacannot_results>     Path to bacannot results folder.
     -o --output=<outfile>             JSON summary output file [Default: bacannot_summary.json].
+    -p --print                        Also print resolved JSON to stdout.
 """
 
 ##################################
@@ -73,7 +74,7 @@ def dict_init(indir):
 #######################################
 ### Def main bacannot2json function ###
 #######################################
-def bacannot2json(indir, outfile):
+def bacannot2json(indir, outfile, check):
 
     # initialize
     bacannot_dir, bacannot_summary = dict_init( indir )
@@ -96,4 +97,8 @@ def bacannot2json(indir, outfile):
         file.write(final_results)
 
     # keep checking
-    print( final_results )
+    if check:
+        print( final_results )
+    
+    # bye bye
+    print(f"==> Output generated and saved at:\n\t{outfile}")
