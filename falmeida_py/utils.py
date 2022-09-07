@@ -18,4 +18,7 @@ def load_and_subset_gff(file, col, pattern):
 
     filter = df[col].str.contains(pattern)
 
-    return df[filter]
+    df = df[filter]
+    df.drop_duplicates(inplace=True)
+
+    return df

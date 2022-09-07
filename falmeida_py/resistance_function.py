@@ -45,7 +45,6 @@ def resistance_stats(bacannot_summary):
 
                 # load gff
                 gff = load_and_subset_gff(gff_file, 'source', 'AMRFinderPlus')
-                gff.drop_duplicates(inplace=True)
 
                 # number of annotations
                 total_number = len(results['Protein identifier'].unique())
@@ -85,36 +84,33 @@ def resistance_stats(bacannot_summary):
                 # init resfinder annotation dictionary
                 bacannot_summary[sample]['resistance']['resfinder'] = {}
 
-                # load resfinder results
-                results = pd.read_csv(
-                    f"{results_dir}/resistance/resfinder/ResFinder_results_tab.txt",
-                    sep='\t'
-                )
-                results.drop_duplicates(inplace=True)
+                # load gff
+                gff = load_and_subset_gff(gff_file, 'source', 'Resfinder')
 
                 # number of annotations
-                bacannot_summary[sample]['resistance']['amrfinderplus']['total'] = len(results.index)
+                bacannot_summary[sample]['resistance']['resfinder']['total'] = len(gff.index)
 
-                # contigs with annotations
-                for seq in [ str(x) for x in results['Contig'].unique() ]:
+                # since resfinder output does not has locus_tag information
+                # for this module, we will be using the resolved gff from bacannot
+                for index, row in gff.iterrows():
 
-                    # init
-                    bacannot_summary[sample]['resistance']['resfinder'][seq] = {}
-
-                # parse
-                for index, row in results.iterrows():
-                    
-                    # init
-                    seq    = row['Contig']
-                    gene   = row['Resistance gene']
+                    # init attributes as dict
+                    attributes = dict()
+                    for keyvaluepair in row['attributes'].split(';'):
+                        items = keyvaluepair.split('=')
+                        key   = items[0]
+                        value = '='.join(items[1:])
+                        attributes[key] = value
+                    gene = attributes['ID']
 
                     # parse
-                    bacannot_summary[sample]['resistance']['resfinder'][seq][gene] = {}
-                    bacannot_summary[sample]['resistance']['resfinder'][seq][gene]['start'] = row['Position in contig'].split('..')[0]
-                    bacannot_summary[sample]['resistance']['resfinder'][seq][gene]['end']   = row['Position in contig'].split('..')[1]
-                    bacannot_summary[sample]['resistance']['resfinder'][seq][gene]['Identity'] = row['Identity']
-                    bacannot_summary[sample]['resistance']['resfinder'][seq][gene]['phenotype'] = row['Phenotype']
-                    bacannot_summary[sample]['resistance']['resfinder'][seq][gene]['accession'] = row['Accession no.']
+                    bacannot_summary[sample]['resistance']['resfinder'][gene] = {}
+                    bacannot_summary[sample]['resistance']['resfinder'][gene]['start'] = row['start']
+                    bacannot_summary[sample]['resistance']['resfinder'][gene]['end']   = row['end']
+                    # bacannot_summary[sample]['resistance']['resfinder'][gene]['Identity'] = row['Identity']
+                    bacannot_summary[sample]['resistance']['resfinder'][gene]['name'] = attributes['Resfinder_gene']
+                    bacannot_summary[sample]['resistance']['resfinder'][gene]['phenotype'] = attributes['Resfinder_phenotype']
+                    bacannot_summary[sample]['resistance']['resfinder'][gene]['accession'] = attributes['Resfinder_reference']
             
             ###########
             ### rgi ###
@@ -133,7 +129,6 @@ def resistance_stats(bacannot_summary):
 
                 # load gff
                 gff = load_and_subset_gff(gff_file, 'source', 'CARD')
-                gff.drop_duplicates(inplace=True)
 
                 # number of annotations
                 total_number = len(results['ORF_ID'].unique())
