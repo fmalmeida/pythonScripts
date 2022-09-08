@@ -67,6 +67,7 @@ def dict_init(indir):
     # initiate first dictionary level
     for sample in available_samples:
         bacannot_summary[sample] = {}
+        bacannot_summary[sample]['sample'] = f"{sample}"
         bacannot_summary[sample]['results_dir'] = f"{bacannot_dir}/{sample}"
     
     return bacannot_dir,bacannot_summary
