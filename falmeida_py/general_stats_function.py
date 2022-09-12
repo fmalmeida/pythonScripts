@@ -36,7 +36,7 @@ def general_stats(bacannot_summary):
 
         # save annotation stats
         bacannot_summary[sample]['general_annotation'] = {}
-        bacannot_summary[sample]['general_annotation']['mlst']  = str(mlst_results[2].item()).replace('-', 'NaN')
+        bacannot_summary[sample]['general_annotation']['mlst']  = str(mlst_results[2].item()).replace('-', 'null')
         bacannot_summary[sample]['general_annotation']['cds']   = general_results['CDS']
         bacannot_summary[sample]['general_annotation']['rrna']  = general_results['rRNA']
         bacannot_summary[sample]['general_annotation']['trna']  = general_results['tRNA']
