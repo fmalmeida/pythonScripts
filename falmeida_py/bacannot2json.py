@@ -28,6 +28,7 @@ Options:
 from docopt import docopt
 import pandas as pd
 import json
+import simplejson
 import os
 import yaml
 from pathlib import Path
@@ -93,7 +94,12 @@ def bacannot2json(indir, outfile, check):
     resistance_stats( bacannot_summary )
 
     # save results
-    final_results = json.dumps( bacannot_summary, sort_keys=True, indent=4 )
+    final_results = simplejson.dumps( 
+        bacannot_summary, 
+        sort_keys=True, 
+        indent=4, 
+        ignore_nan=True 
+    )
     with open(outfile, 'w') as file:
         file.write(final_results)
 

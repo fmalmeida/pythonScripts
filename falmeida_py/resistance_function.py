@@ -58,6 +58,7 @@ def resistance_stats(bacannot_summary):
                     bacannot_summary[sample]['resistance']['amrfinderplus'][gene] = {}
                     gene_name = row['Gene symbol'].item()
                     drug_class = row['Subclass'].item()
+                    drug_type = row['Element type'].item()
                     identity = row['% Identity to reference sequence'].item()
 
                     gff_row = gff[gff['attributes'].str.contains(f"ID={gene}")]
@@ -68,6 +69,7 @@ def resistance_stats(bacannot_summary):
                     # add values to dict
                     bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['gene'] = gene_name
                     bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['subclass'] = drug_class
+                    bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['type'] = drug_type
                     bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['identity'] = identity
                     bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['contig'] = contig
                     bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['start'] = start
@@ -117,10 +119,10 @@ def resistance_stats(bacannot_summary):
             ###########
             if os.path.exists(f"{results_dir}/resistance/RGI/RGI_{sample}.txt"):
 
-                # init amrfinderplus annotation dictionary
+                # init rgi annotation dictionary
                 bacannot_summary[sample]['resistance']['rgi'] = {}
 
-                # load amrfinderplus results
+                # load rgi results
                 results = pd.read_csv(
                     f"{results_dir}/resistance/RGI/RGI_{sample}.txt",
                     sep='\t'
