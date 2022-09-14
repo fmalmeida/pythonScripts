@@ -132,7 +132,7 @@ def resistance_stats(bacannot_summary):
                     if gene in bacannot_summary[sample]['resistance']['rgi']:
                         bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['card_aro'] = bacannot_summary[sample]['resistance']['rgi'][gene]['card_aro']
                     else:
-                        bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['card_aro'] = 'null'
+                        bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['card_aro'] = None
             
             #################
             ### resfinder ###
@@ -179,4 +179,4 @@ def resistance_stats(bacannot_summary):
                     if gene in bacannot_summary[sample]['resistance']['rgi']:
                         bacannot_summary[sample]['resistance']['resfinder'][gene]['card_aro'] = bacannot_summary[sample]['resistance']['rgi'][gene]['card_aro']
                     else:
-                        bacannot_summary[sample]['resistance']['resfinder'][gene]['card_aro'] = 'null'
+                        bacannot_summary[sample]['resistance']['resfinder'][gene]['card_aro'] = None
