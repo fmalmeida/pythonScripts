@@ -63,22 +63,24 @@ def plasmids_stats(bacannot_summary):
                     sep='\t'
                 )
 
-                # databases
-                bacannot_summary[sample]['plasmid']['plasmidfinder']['meta'] = {}
-                bacannot_summary[sample]['plasmid']['plasmidfinder']['meta']['database'] = results['Database'].unique().item()
+                if not results.empty:
 
-                # number of plasmid annotations
-                total_number = len(results['Contig'].unique())
-                bacannot_summary[sample]['plasmid']['plasmidfinder']['total'] = total_number
+                    # databases
+                    bacannot_summary[sample]['plasmid']['plasmidfinder']['meta'] = {}
+                    bacannot_summary[sample]['plasmid']['plasmidfinder']['meta']['database'] = results['Database'].unique().item()
 
-                # plasmid annotations contigs
-                for seq in [ str(x) for x in results['Contig'].unique() ]:
-                    bacannot_summary[sample]['plasmid']['plasmidfinder'][seq] = {}
-                    bacannot_summary[sample]['plasmid']['plasmidfinder'][seq]['inc_types'] = {}
-                    bacannot_summary[sample]['plasmid']['plasmidfinder'][seq]['identity'] = {}
-                    bacannot_summary[sample]['plasmid']['plasmidfinder'][seq]['accession'] = {}
-                for index, row in results.iterrows():
-                    contig = row['Contig']
-                    bacannot_summary[sample]['plasmid']['plasmidfinder'][contig]['inc_types'] = row['Plasmid']
-                    bacannot_summary[sample]['plasmid']['plasmidfinder'][contig]['identity'] = row['Identity']
-                    bacannot_summary[sample]['plasmid']['plasmidfinder'][contig]['accession'] = row['Accession number']
+                    # number of plasmid annotations
+                    total_number = len(results['Contig'].unique())
+                    bacannot_summary[sample]['plasmid']['plasmidfinder']['total'] = total_number
+
+                    # plasmid annotations contigs
+                    for seq in [ str(x) for x in results['Contig'].unique() ]:
+                        bacannot_summary[sample]['plasmid']['plasmidfinder'][seq] = {}
+                        bacannot_summary[sample]['plasmid']['plasmidfinder'][seq]['inc_types'] = {}
+                        bacannot_summary[sample]['plasmid']['plasmidfinder'][seq]['identity'] = {}
+                        bacannot_summary[sample]['plasmid']['plasmidfinder'][seq]['accession'] = {}
+                    for index, row in results.iterrows():
+                        contig = row['Contig']
+                        bacannot_summary[sample]['plasmid']['plasmidfinder'][contig]['inc_types'] = row['Plasmid']
+                        bacannot_summary[sample]['plasmid']['plasmidfinder'][contig]['identity'] = row['Identity']
+                        bacannot_summary[sample]['plasmid']['plasmidfinder'][contig]['accession'] = row['Accession number']

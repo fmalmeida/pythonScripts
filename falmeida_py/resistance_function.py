@@ -8,6 +8,7 @@ import os
 import yaml
 from pathlib import Path
 from .utils import load_and_subset_gff
+from pprint import pprint
 
 ##########################################
 ### check resistance annotations stats ###
@@ -180,3 +181,10 @@ def resistance_stats(bacannot_summary):
                         bacannot_summary[sample]['resistance']['resfinder'][gene]['card_aro'] = bacannot_summary[sample]['resistance']['rgi'][gene]['card_aro']
                     else:
                         bacannot_summary[sample]['resistance']['resfinder'][gene]['card_aro'] = None
+                    
+            #
+            # parse again to check for resfinder entries where aro index was not included
+            #
+            pprint(
+                sample
+            )
