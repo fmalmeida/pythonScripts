@@ -13,3 +13,28 @@ options:
     --csv=<file>                            Input csv file to print as markdown table
     --header=<list>                         If file does not have a header, set a
                                             custom header. E.g. --header "Planet,R (km),mass (x 10^29 kg)".
+falmeida-py: a package to the simple distribution of my custom scripts.
+
+Copyright (C) 2020 Felipe Marques de Almeida (almeidafmarques@gmail.com)
+License: Public Domain
+
+usage:
+    falmeida-py [ -h|--help ] [ -v|--version ] [ --license ]
+    falmeida-py <command> [ -h|--help ] [ <args>... ]
+
+options:
+    -h --help                  Show this screen
+    -v --version               Show version information
+    --license                  Show LEGAL LICENSE information
+
+commands:
+    tsv2markdown               Command for rapid convertion of tsv or csv to markdown tables.
+    splitgbk                   Command to split multisequence genbank files into individual files.
+    align2subsetgbk            Command to subset genbank files based on alignments to a FASTA file.
+    gbk2fasta                  Command to convert genbank files to fasta files.
+    blasts                     Command to execute automatized blast commands.
+    replace_fasta_seq          Command to replace strings in a FASTA using defitinitions from a BED file
+    mpgap2csv                  Command to summarize main mpgap multiqc assembly statistics into a CSV file
+    bacannot2json              Command to summarize main bacannot annotation results into JSON file
+
+Use: `falmeida-py <commmand> -h` to get more help and see examples.
