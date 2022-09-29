@@ -2,3 +2,6 @@ docopt
 pandas
 tabulate
 biopython
+simplejson
+importlib_metadata
+yaml

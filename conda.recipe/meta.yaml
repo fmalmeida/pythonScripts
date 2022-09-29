@@ -21,6 +21,9 @@ requirements:
     - tabulate
     - docopt
     - biopython
+    - simplejson
+    - importlib_metadata
+    - pyyaml
 
   run:
     - python {{PY_VER}}*
@@ -30,6 +33,9 @@ requirements:
     - tabulate
     - docopt
     - biopython
+    - simplejson
+    - importlib_metadata
+    - pyyaml
 
 channels:
   - anaconda
