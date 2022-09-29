@@ -2,7 +2,7 @@
 The version is stored here in a separate file so it can exist in only one place.
 https://stackoverflow.com/a/7071358/2438989
 
-Copyright 2020 Felipe Almeida (almeidafmarques@gmail.com)
+Copyright 2022 Felipe Almeida (almeidafmarques@gmail.com)
 https://github.com/fmalmeida/pythonScripts
 
 This file is part of my custom python scripts (falmeida-py) package, which is free: you can redistribute it and/or modify
@@ -14,7 +14,7 @@ details. You should have received a copy of the GNU General Public License along
 If not, see <http://www.gnu.org/licenses/>.
 """
 
-__version__ = '0.5'
+__version__ = '0.6'
 
 def get_version():
     return __version__

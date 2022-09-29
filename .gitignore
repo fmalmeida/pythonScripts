@@ -3,3 +3,5 @@ dist
 falmeida_py/__pycache__
 build/*
 docs/_build
+PHD_FILES
+test*
