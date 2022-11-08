@@ -62,16 +62,13 @@ def dict_init(indir):
     # detect available samples
     available_samples = [ str(x) for x in get_samples(available_annotations) ]
 
-    # get input absolute path
-    bacannot_dir = '/'.join(os.path.abspath(available_annotations[0]).split('/')[:-2])
-
     # initiate first dictionary level
     for sample in available_samples:
         bacannot_summary[sample] = {}
         bacannot_summary[sample]['sample'] = f"{sample}"
-        bacannot_summary[sample]['results_dir'] = f"{bacannot_dir}/{sample}"
+        bacannot_summary[sample]['results_dir'] = f"{indir}/{sample}"
     
-    return bacannot_dir,bacannot_summary
+    return bacannot_summary
 
 #######################################
 ### Def main bacannot2json function ###
@@ -79,7 +76,8 @@ def dict_init(indir):
 def bacannot2json(indir, outfile, check):
 
     # initialize
-    bacannot_dir, bacannot_summary = dict_init( indir )
+    bacannot_dir     = os.path.abspath( indir )
+    bacannot_summary = dict_init( bacannot_dir )
 
     # check general annotation stats
     general_stats( bacannot_summary )
