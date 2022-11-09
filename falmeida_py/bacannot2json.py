@@ -38,6 +38,33 @@ from .plasmid_function import *
 from .virulence_function import *
 from .resistance_function import *
 
+##############################
+### fix keys in dictionary ###
+##############################
+def stringify_keys(d):
+    """Convert a dict's keys to strings if they are not."""
+    for key in d.keys():
+
+        # check inner dict
+        if isinstance(d[key], dict):
+            value = stringify_keys(d[key])
+        else:
+            value = d[key]
+
+        # convert nonstring to string if needed
+        if not isinstance(key, str):
+            try:
+                d[str(key)] = value
+            except Exception:
+                try:
+                    d[repr(key)] = value
+                except Exception:
+                    raise
+
+            # delete old key
+            del d[key]
+    return d
+
 ###############################################
 ### based on annotations figure sample name ###
 ###############################################
@@ -93,7 +120,7 @@ def bacannot2json(indir, outfile, check):
 
     # save results
     final_results = simplejson.dumps( 
-        bacannot_summary, 
+        stringify_keys( bacannot_summary ), 
         sort_keys=True, 
         indent=4, 
         ignore_nan=True 
