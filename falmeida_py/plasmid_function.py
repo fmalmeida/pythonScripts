@@ -44,6 +44,7 @@ def plasmids_stats(bacannot_summary):
                 # per plasmid info
                 for seq in [x for x in results['ID'].unique()]:
                     bacannot_summary[sample]['plasmid']['platon'][seq] = {}
+                    bacannot_summary[sample]['plasmid']['platon'][seq]['Length'] = results.loc[results['ID'] == seq, 'Length'].item()
                     bacannot_summary[sample]['plasmid']['platon'][seq]['ORFs'] = results.loc[results['ID'] == seq, '# ORFs'].item()
                     bacannot_summary[sample]['plasmid']['platon'][seq]['Circular'] = results.loc[results['ID'] == seq, 'Circular'].item()
                     bacannot_summary[sample]['plasmid']['platon'][seq]['AMRs'] = results.loc[results['ID'] == seq, '# AMRs'].item()
