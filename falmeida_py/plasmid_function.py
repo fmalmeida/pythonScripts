@@ -42,15 +42,17 @@ def plasmids_stats(bacannot_summary):
                 bacannot_summary[sample]['plasmid']['platon']['total'] = total_number
 
                 # per plasmid info
-                for seq in [x for x in results['ID'].unique()]:
-                    bacannot_summary[sample]['plasmid']['platon'][seq] = {}
-                    bacannot_summary[sample]['plasmid']['platon'][seq]['Length'] = results.loc[results['ID'] == seq, 'Length'].item()
-                    bacannot_summary[sample]['plasmid']['platon'][seq]['ORFs'] = results.loc[results['ID'] == seq, '# ORFs'].item()
-                    bacannot_summary[sample]['plasmid']['platon'][seq]['Circular'] = results.loc[results['ID'] == seq, 'Circular'].item()
-                    bacannot_summary[sample]['plasmid']['platon'][seq]['AMRs'] = results.loc[results['ID'] == seq, '# AMRs'].item()
-                    bacannot_summary[sample]['plasmid']['platon'][seq]['Replication'] = results.loc[results['ID'] == seq, '# Replication'].item()
-                    bacannot_summary[sample]['plasmid']['platon'][seq]['Mobilization'] = results.loc[results['ID'] == seq, '# Mobilization'].item()
-                    bacannot_summary[sample]['plasmid']['platon'][seq]['Conjugation'] = results.loc[results['ID'] == seq, '# Conjugation'].item()
+                bacannot_summary[sample]['plasmid']['platon'] = {}
+                if int(results.shape[0]) > 0:
+                    for seq in [x for x in results['ID'].unique()]:
+                        bacannot_summary[sample]['plasmid']['platon'][seq] = {}
+                        bacannot_summary[sample]['plasmid']['platon'][seq]['Length'] = results.loc[results['ID'] == seq, 'Length'].item()
+                        bacannot_summary[sample]['plasmid']['platon'][seq]['ORFs'] = results.loc[results['ID'] == seq, '# ORFs'].item()
+                        bacannot_summary[sample]['plasmid']['platon'][seq]['Circular'] = results.loc[results['ID'] == seq, 'Circular'].item()
+                        bacannot_summary[sample]['plasmid']['platon'][seq]['AMRs'] = results.loc[results['ID'] == seq, '# AMRs'].item()
+                        bacannot_summary[sample]['plasmid']['platon'][seq]['Replication'] = results.loc[results['ID'] == seq, '# Replication'].item()
+                        bacannot_summary[sample]['plasmid']['platon'][seq]['Mobilization'] = results.loc[results['ID'] == seq, '# Mobilization'].item()
+                        bacannot_summary[sample]['plasmid']['platon'][seq]['Conjugation'] = results.loc[results['ID'] == seq, '# Conjugation'].item()
             
             # plasmidfinder
             if os.path.exists(f"{results_dir}/plasmids/plasmidfinder/results_tab.tsv"):
