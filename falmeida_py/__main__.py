@@ -148,8 +148,8 @@ def main():
             print(f"Processing file: {args['--gbk']}!")
             gbk2fasta(gbk=args['--gbk'])
             blast(task='blastn', query=args['--fasta'], subject='tmp_gbk.fa',
-             culling=args['--culling_limit'], minid=args['--minid'], mincov=args['--mincov'],
-             out='out.blast', threads=1, twoway=None)
+            culling=args['--culling_limit'], minid=args['--minid'], mincov=args['--mincov'],
+            out='out.blast', threads=1, twoway=None)
             filtergbk(gbk=args['--gbk'], out=args['--out'], extension=int(args['--extension']))
 
             # Clean dir
