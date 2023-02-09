@@ -82,8 +82,9 @@ def plasmids_stats(bacannot_summary):
                         bacannot_summary[sample]['plasmid']['plasmidfinder'][seq]['inc_types'] = {}
                         bacannot_summary[sample]['plasmid']['plasmidfinder'][seq]['identity'] = {}
                         bacannot_summary[sample]['plasmid']['plasmidfinder'][seq]['accession'] = {}
+                    
                     for index, row in results.iterrows():
-                        contig = row['Contig']
+                        contig = str(row['Contig'])
                         bacannot_summary[sample]['plasmid']['plasmidfinder'][contig]['inc_types'] = row['Plasmid']
                         bacannot_summary[sample]['plasmid']['plasmidfinder'][contig]['identity'] = row['Identity']
                         bacannot_summary[sample]['plasmid']['plasmidfinder'][contig]['accession'] = row['Accession number']

@@ -41,29 +41,20 @@ from .resistance_function import *
 ##############################
 ### fix keys in dictionary ###
 ##############################
+def convert_dictkey(d):
+    ###change all keys in a dict d
+    return { str(k): convert_dictvalue(v) for k,v in d.items() }
+
+def convert_dictvalue(v):
+    ###if v is a dict do convert_dictkey() for v, else raise v
+    if isinstance(v, dict):
+        return convert_dictkey(v)
+    else:
+        return v
+
 def stringify_keys(d):
     """Convert a dict's keys to strings if they are not."""
-    for key in d.keys():
-
-        # check inner dict
-        if isinstance(d[key], dict):
-            value = stringify_keys(d[key])
-        else:
-            value = d[key]
-
-        # convert nonstring to string if needed
-        if not isinstance(key, str):
-            try:
-                d[str(key)] = value
-            except Exception:
-                try:
-                    d[repr(key)] = value
-                except Exception:
-                    raise
-
-            # delete old key
-            del d[key]
-    return d
+    return convert_dictkey(d)
 
 ###############################################
 ### based on annotations figure sample name ###
