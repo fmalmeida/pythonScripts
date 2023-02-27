@@ -2,11 +2,7 @@
 ### Loading Necessary Packages ###
 ##################################
 import pandas as pd
-from .utils import find_files
-import json
 import os
-import yaml
-from pathlib import Path
 
 ########################################
 ### check plasmids annotations stats ###

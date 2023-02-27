@@ -37,6 +37,7 @@ from .general_stats_function import *
 from .plasmid_function import *
 from .virulence_function import *
 from .resistance_function import *
+from .mges_function import *
 
 ##############################
 ### fix keys in dictionary ###
@@ -102,6 +103,9 @@ def bacannot2json(indir, outfile, check):
 
     # check virulence annotation stats
     virulence_stats( bacannot_summary )
+
+    # check MGEs annotation stats
+    mges_stats( bacannot_summary )
 
     # check plasmids annotation stats
     plasmids_stats( bacannot_summary )
