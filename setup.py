@@ -30,18 +30,20 @@ exec(open('falmeida_py/version.py').read())
 with open('requirements.txt') as f:
     required = f.read().splitlines()
 
-setup(name='falmeida-py',
-      version=__version__,
-      description='falmeida-py: a package to the simple distribution of my custom scripts.',
-      long_description=readme(),
-      long_description_content_type='text/markdown',
-      url='https://github.com/fmalmeida/pythonScripts',
-      author='Felipe Almeida',
-      author_email='almeidafmarques@gmail.com',
-      license='GPLv3',
-      packages=['falmeida_py'],
-      install_requires=required,
-      entry_points={"console_scripts": ['falmeida-py = falmeida_py.__main__:main']},
-      include_package_data=True,
-      zip_safe=False,
-      python_requires='>=3.6')
+setup(
+    name='falmeida-py',
+    version=__version__,
+    description='falmeida-py: a package to the simple distribution of my custom scripts.',
+    long_description=readme(),
+    long_description_content_type='text/markdown',
+    url='https://github.com/fmalmeida/pythonScripts',
+    author='Felipe Almeida',
+    author_email='almeidafmarques@gmail.com',
+    license='GPLv3',
+    packages=['falmeida_py'],
+    install_requires=required,
+    entry_points={"console_scripts": ['falmeida-py = falmeida_py.__main__:main']},
+    include_package_data=True,
+    zip_safe=False,
+    python_requires='>=3.6'
+)
