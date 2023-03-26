@@ -82,14 +82,14 @@ def plasmids_stats(bacannot_summary):
                     bacannot_summary[sample]['plasmid']['plasmidfinder'][contig]['accession'] = row['Accession number']
         
         # mob suite
-        if os.path.exists(f"{results_dir}/mob_suite/{sample}_mobtyper_results.txt"):
+        if os.path.exists(f"{results_dir}/plasmids/mob_suite/{sample}_mobtyper_results.txt"):
 
             # init integron_finder annotation dictionary
             bacannot_summary[sample]['plasmid']['mob_suite'] = {}
 
             # load integron_finder results
             results = pd.read_csv(
-                f"{results_dir}/mob_suite/{sample}_mobtyper_results.txt",
+                f"{results_dir}/plasmids/mob_suite/{sample}_mobtyper_results.txt",
                 sep='\t',
                 header='infer',
                 # sample_id	num_contigs	size	gc	md5	rep_type(s)	rep_type_accession(s)	relaxase_type(s)	relaxase_type_accession(s)	mpf_type	mpf_type_accession(s)	orit_type(s)	orit_accession(s)	predicted_mobility	mash_nearest_neighbor	mash_neighbor_distance	mash_neighbor_identification	primary_cluster_id	secondary_cluster_id	predicted_host_range_overall_rank	predicted_host_range_overall_name	observed_host_range_ncbi_rank	observed_host_range_ncbi_name	reported_host_range_lit_rank	reported_host_range_lit_name	associated_pmid(s)
