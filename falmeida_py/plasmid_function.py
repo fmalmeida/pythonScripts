@@ -61,8 +61,10 @@ def plasmids_stats(bacannot_summary):
             if not results.empty:
 
                 # databases
+                print( results['Database'].unique() )
                 bacannot_summary[sample]['plasmid']['plasmidfinder']['meta'] = {}
-                bacannot_summary[sample]['plasmid']['plasmidfinder']['meta']['database'] = results['Database'].unique().item()
+                db_arr = results['Database'].unique()
+                bacannot_summary[sample]['plasmid']['plasmidfinder']['meta']['database'] = db_arr.tolist() if len(db_arr) > 1 else db_arr.item()
 
                 # number of plasmid annotations
                 total_number = len(results['Contig'].unique())
