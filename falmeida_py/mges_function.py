@@ -14,12 +14,13 @@ def mges_stats(bacannot_summary):
 
         # load dir of samples' results
         results_dir = bacannot_summary[sample]['results_dir']
-
-        # init MGE annotation dictionary
-        bacannot_summary[sample]['MGE'] = {}
             
         # integron_finder
         if os.path.exists(f"{results_dir}/integron_finder/{sample}_integrons.gff") and os.stat(f"{results_dir}/integron_finder/{sample}_integrons.gff").st_size > 0:
+
+            # init MGE annotation dictionary
+            if 'MGE' not in bacannot_summary[sample]:
+                bacannot_summary[sample]['MGE'] = {}
 
             # init integron_finder annotation dictionary
             bacannot_summary[sample]['MGE']['integron_finder'] = {}
