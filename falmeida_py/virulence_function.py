@@ -30,7 +30,7 @@ def virulence_stats(bacannot_summary):
             bacannot_summary[sample]['virulence'] = {}
             
             # vfdb
-            if os.path.exists(f"{results_dir}/virulence/vfdb/{sample}_vfdb_blastn_onGenes.summary.txt"):
+            if os.path.exists(f"{results_dir}/virulence/vfdb/{sample}_vfdb_blastn_onGenes.summary.txt") and os.stat(f"{results_dir}/virulence/vfdb/{sample}_vfdb_blastn_onGenes.summary.txt").st_size > 0:
 
                 # init VFDB annotation dictionary
                 bacannot_summary[sample]['virulence']['VFDB'] = {}
@@ -73,7 +73,7 @@ def virulence_stats(bacannot_summary):
                     bacannot_summary[sample]['virulence']['VFDB'][gene]['end'] = end
             
             # victors
-            if os.path.exists(f"{results_dir}/virulence/victors/{sample}_victors_blastp_onGenes.summary.txt"):
+            if os.path.exists(f"{results_dir}/virulence/victors/{sample}_victors_blastp_onGenes.summary.txt") and os.stat(f"{results_dir}/virulence/victors/{sample}_victors_blastp_onGenes.summary.txt").st_size > 0:
 
                 # init victors annotation dictionary
                 gff = bacannot_summary[sample]['virulence']['Victors'] = {}

@@ -19,7 +19,7 @@ def plasmids_stats(bacannot_summary):
         bacannot_summary[sample]['plasmid'] = {}            
             
         # platon
-        if os.path.exists(f"{results_dir}/plasmids/platon/{sample}.tsv"):
+        if os.path.exists(f"{results_dir}/plasmids/platon/{sample}.tsv") and os.stat(f"{results_dir}/plasmids/platon/{sample}.tsv").st_size > 0:
 
             # init platon annotation dictionary
             bacannot_summary[sample]['plasmid']['platon'] = {}
@@ -47,7 +47,7 @@ def plasmids_stats(bacannot_summary):
                     bacannot_summary[sample]['plasmid']['platon'][seq]['Conjugation'] = results.loc[results['ID'] == seq, '# Conjugation'].item()
         
         # plasmidfinder
-        if os.path.exists(f"{results_dir}/plasmids/plasmidfinder/results_tab.tsv"):
+        if os.path.exists(f"{results_dir}/plasmids/plasmidfinder/results_tab.tsv") and os.stat(f"{results_dir}/plasmids/plasmidfinder/results_tab.tsv").st_size > 0:
 
             # init platon annotation dictionary
             bacannot_summary[sample]['plasmid']['plasmidfinder'] = {}
@@ -84,7 +84,7 @@ def plasmids_stats(bacannot_summary):
                     bacannot_summary[sample]['plasmid']['plasmidfinder'][contig]['accession'] = row['Accession number']
         
         # mob suite
-        if os.path.exists(f"{results_dir}/plasmids/mob_suite/{sample}_mobtyper_results.txt"):
+        if os.path.exists(f"{results_dir}/plasmids/mob_suite/{sample}_mobtyper_results.txt") and os.stat(f"{results_dir}/plasmids/mob_suite/{sample}_mobtyper_results.txt").st_size > 0:
 
             # init integron_finder annotation dictionary
             bacannot_summary[sample]['plasmid']['mob_suite'] = {}
@@ -107,7 +107,7 @@ def plasmids_stats(bacannot_summary):
                 for seq in [ str(x) for x in results['sample_id'].unique() ]:
                     
                     bacannot_summary[sample]['plasmid']['mob_suite'][seq] = {}
-                    for index, row in results[results['sample_id'] == seq].reset_index().iterrows():
+                    for index, row in results[results['sample_id'].astype(str) == seq].reset_index().iterrows():
                         id = row['sample_id'] # they are the same for this result
                         bacannot_summary[sample]['plasmid']['mob_suite'][seq][id] = {}
                         bacannot_summary[sample]['plasmid']['mob_suite'][seq][id]['size'] = row['size']

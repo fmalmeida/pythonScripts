@@ -33,7 +33,7 @@ def resistance_stats(bacannot_summary):
             ###########
             ### rgi ###
             ###########
-            if os.path.exists(f"{results_dir}/resistance/RGI/RGI_{sample}.txt"):
+            if os.path.exists(f"{results_dir}/resistance/RGI/RGI_{sample}.txt") and os.stat(f"{results_dir}/resistance/RGI/RGI_{sample}.txt").st_size > 0:
 
                 # init rgi annotation dictionary
                 bacannot_summary[sample]['resistance']['rgi'] = {}
@@ -84,7 +84,7 @@ def resistance_stats(bacannot_summary):
             #####################
             ### amrfinderplus ###
             #####################
-            if os.path.exists(f"{results_dir}/resistance/AMRFinderPlus/AMRFinder_resistance-only.tsv"):
+            if os.path.exists(f"{results_dir}/resistance/AMRFinderPlus/AMRFinder_resistance-only.tsv") and os.stat(f"{results_dir}/resistance/AMRFinderPlus/AMRFinder_resistance-only.tsv").st_size > 0:
 
                 # init amrfinderplus annotation dictionary
                 bacannot_summary[sample]['resistance']['amrfinderplus'] = {}
@@ -141,7 +141,7 @@ def resistance_stats(bacannot_summary):
             #
             # TODO: Include genomic coordinates info
             #
-            if os.path.exists(f"{results_dir}/resistance/resfinder/ResFinder_results_tab.txt"):
+            if os.path.exists(f"{results_dir}/resistance/resfinder/ResFinder_results_tab.txt") and os.stat(f"{results_dir}/resistance/resfinder/ResFinder_results_tab.txt").st_size > 0:
 
                 # init resfinder annotation dictionary
                 bacannot_summary[sample]['resistance']['resfinder'] = {}

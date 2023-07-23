@@ -19,7 +19,7 @@ def mges_stats(bacannot_summary):
         bacannot_summary[sample]['MGE'] = {}
             
         # integron_finder
-        if os.path.exists(f"{results_dir}/integron_finder/{sample}_integrons.gff"):
+        if os.path.exists(f"{results_dir}/integron_finder/{sample}_integrons.gff") and os.stat(f"{results_dir}/integron_finder/{sample}_integrons.gff").st_size > 0:
 
             # init integron_finder annotation dictionary
             bacannot_summary[sample]['MGE']['integron_finder'] = {}
