@@ -2,6 +2,10 @@
 
 Started only in version 0.5
 
+## v1.2.3
+
+- Added ICEberg and PHAST results to bacannot json summary file
+
 ## v1.2.2
 
 - Added a file size check, only enter bacannot summary creation if results files are not empty
