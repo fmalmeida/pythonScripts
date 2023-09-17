@@ -1,0 +1,6 @@
+[project]
+name="falmeida-py"
+version="1.2.3"
+description="A python package of my (Felipe M. Almeida) personal python scripts"
+requires-python=">=3.7"
+readme="README.md"
