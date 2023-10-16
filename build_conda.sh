@@ -9,6 +9,7 @@ conda convert -p osx-64 $(find build -name "falmeida-py*.tar.bz2")
 
 # upload osx
 anaconda upload $(find osx-64 -name "falmeida-py*.tar.bz2") --force
+sleep 140
 anaconda upload $(find build/linux-64 -name "falmeida-py*.tar.bz2") --force
 
 # rm dirs
