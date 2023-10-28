@@ -37,10 +37,10 @@ def general_stats(bacannot_summary):
         # save annotation stats
         bacannot_summary[sample]['general_annotation'] = {}
         bacannot_summary[sample]['general_annotation']['mlst']  = str(mlst_results[2].item()).replace('-', 'null')
-        bacannot_summary[sample]['general_annotation']['cds']   = general_results['CDS']
-        bacannot_summary[sample]['general_annotation']['rrna']  = general_results['rRNA']
-        bacannot_summary[sample]['general_annotation']['trna']  = general_results['tRNA']
-        bacannot_summary[sample]['general_annotation']['tmrna'] = general_results['tmRNA']
+        bacannot_summary[sample]['general_annotation']['cds']   = general_results.get('CDS', 0)
+        bacannot_summary[sample]['general_annotation']['rrna']  = general_results.get('rRNA', 0)
+        bacannot_summary[sample]['general_annotation']['trna']  = general_results.get('tRNA', 0)
+        bacannot_summary[sample]['general_annotation']['tmrna'] = general_results.get('tmRNA', 0)
 
         bacannot_summary[sample]['general_annotation']['closest_reference'] = {}
         bacannot_summary[sample]['general_annotation']['closest_reference']['strain'] = refseq_masher_results.head(1)['top_taxonomy_name'].item()
