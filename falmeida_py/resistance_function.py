@@ -130,10 +130,13 @@ def resistance_stats(bacannot_summary):
                     #
                     # check for rgi orthologies
                     #
-                    if gene in bacannot_summary[sample]['resistance']['rgi']:
-                        bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['card_aro'] = bacannot_summary[sample]['resistance']['rgi'][gene]['card_aro']
-                    else:
-                        bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['card_aro'] = None
+                    try:
+                      if gene in bacannot_summary[sample]['resistance']['rgi']:
+                          bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['card_aro'] = bacannot_summary[sample]['resistance']['rgi'][gene]['card_aro']
+                      else:
+                          bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['card_aro'] = None
+                    except:
+                      bacannot_summary[sample]['resistance']['amrfinderplus'][gene]['card_aro'] = None
             
             #################
             ### resfinder ###
