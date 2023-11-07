@@ -241,8 +241,8 @@ def main():
     #######################################
     ### Without commands nor parameters ###
     #######################################
-    else:
-        print(usage.strip())
+    elif not arguments['<command>']:
+      print(usage.strip())
 
 ## Calling main
 if __name__ == '__main__':
